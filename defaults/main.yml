@@ -14,20 +14,6 @@ lxd_preloadimages:
     - { i: 'images:/centos/7/amd64', alias: 'centos-7-nossh' }
     - { i: 'images:/centos/6/amd64', alias: 'centos-6-nossh' }
 
-lxd_shellcmds:
-    - "lxc init centos-7-nossh default-centos-7"
-    - "lxc start default-centos-7"
-    - "lxc exec default-centos-7 -- dhclient eth0"
-    - "lxc exec default-centos-7 -- ping -c 1 8.8.8.8"
-    - "lxc exec default-centos-7 -- yum install -y openssh-server sudo"
-    - "lxc exec default-centos-7 -- systemctl enable sshd"
-    - "lxc exec default-centos-7 -- systemctl start sshd"
-    - "lxc exec default-centos-7 -- mkdir /root/.ssh"
-    - "openssl rand -base64 32 | lxc exec default-centos-7 -- passwd root --stdin"
-    - "lxc stop default-centos-7 --force"
-    - "lxc publish default-centos-7 --alias centos-7"
-    - "lxc delete default-centos-7"
-
 lxd_preconfigure: [
         { guest: 'default-ubuntu-1604', template: 'ubuntu-16.04-nopython', publishalias: 'ubuntu-16.04', shellcmds: [
             "dhclient eth0",

@@ -6,6 +6,6 @@
   when: ansible_distribution_release == 'trusty'
 
 - name: apt | lxd
-  apt: name={{item}}
+  apt: name={{item}} update_cache=yes
   with_items: "{{ lxd_ubuntu_packages }}"
 
