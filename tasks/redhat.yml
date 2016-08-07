@@ -1,0 +1,18 @@
+---
+
+- include: redhat-epel.yml
+
+- name: yum | lxd dependencies install
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - debootstrap
+    - perl
+    - libvirt
+    - lxc
+    - lxc-templates
+
+- name: Redhat | Ensure services are enabled
+  service: "name={{ item }} enabled=yes"
+  with_items:
+    - lxc
+

@@ -1,0 +1,29 @@
+---
+## when Ansible 2.2.0 released: use lxd_container module
+
+- block:
+    - name: start lxc instance {{ guest }}
+      shell: "{{ item }}"
+      with_items:
+        - "lxc init {{ template }} {{ guest }}"
+        - "lxc start {{ guest }}"
+      when: lxclist.stdout.find(" {{ guest }} ") == -1
+
+    - name: configure lxc instance {{ guest }}
+      shell: "lxc exec {{ guest }} -- {{ item }}"
+      with_items: "{{ shellcmds }}"
+#      ignore_errors: true
+
+    - name: stop and publish lxc instance {{ guest }}
+      shell: "{{ item }}"
+      with_items:
+        - "lxc stop {{ guest }} --force"
+        - "lxc publish {{ guest }} --alias {{ publishalias }}"
+        - "lxc delete {{ guest }}"
+  when: imagelist.stdout.find(" {{ publishalias }} ") == -1
+
+
+
+
+
+

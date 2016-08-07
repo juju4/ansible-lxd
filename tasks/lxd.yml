@@ -1,0 +1,36 @@
+---
+
+- name: configure lxd bridge
+  template: src=lxd-bridge.j2 dest=/etc/default/lxd-bridge mode=0644 backup=yes
+  notify:
+    - restart lxd-bridge
+  register: lxdconf
+
+## FIXME! if executed in kitchen lxd, "Converge failed"
+- name: force restart of lxd to have working network
+  service: name=lxd state=restarted
+  when: lxdconf.changed and (ansible_virtualization_type is not defined or ansible_virtualization_type != "lxc")
+
+- name: list existing lxc images
+  command: "lxc image list"
+  changed_when: false
+  register: imagelist
+- name: pre copy lxc images
+  include: "lxc-image-copy.yml current={{ imagelist }} image={{ item.i }} alias={{ item.alias }}"
+  with_items: "{{ lxd_preloadimages }}"
+
+- name: list existing lxc images
+  command: "lxc image list"
+  changed_when: false
+  register: imagelist2
+- name: list existing lxc instances
+  command: "lxc list"
+  changed_when: false
+  register: lxclist
+
+- name: pre-configure lxc images
+  include: "lxd-preconfigure.yml imagelist={{ imagelist2 }} lxclist={{ lxclist }} guest={{ outer_item.guest }} template={{ outer_item.template }} publishalias={{ outer_item.publishalias }} shellcmds={{ outer_item.shellcmds }}"
+  with_items: "{{ lxd_preconfigure }}"
+  loop_control:
+    loop_var: outer_item
+

@@ -1,0 +1,8 @@
+---
+
+#- debug: var=current
+- name: download lxc image {{ image }}
+  command: "lxc image copy {{ image }} local: --alias={{ alias }}"
+  when: current is defined and current.stdout.find(alias) == -1
+
+

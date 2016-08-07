@@ -1,0 +1,7 @@
+---
+
+lxd_ubuntu_packages:
+    - lxd
+    - python-pip
+    - python-lxc
+

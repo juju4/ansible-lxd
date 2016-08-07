@@ -1,0 +1,32 @@
+---
+driver:
+  name: vagrant
+  provider: <%= ENV['KITCHEN_PROVIDER'] || 'virtualbox' %>
+
+## make file transfer faster. need https://github.com/coderanger/kitchen-sync
+#transport:
+#  name: sftp
+
+driver_config:
+    customize:
+#      cpus: 2
+      memory: 1024
+
+provisioner:
+  name: ansible_playbook
+  roles_path: ../../roles
+  hosts: test-kitchen
+  ansible_verbose: false
+  ansible_verbosity: 2
+  ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
+#  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+  - name: ubuntu-16.04
+
+suites:
+  - name: default
+    run_list:
+    attributes:
+

@@ -1,0 +1,11 @@
+---
+
+- name: apt | Enable trusty-backports if relevant
+  lineinfile:
+    dest='/etc/apt/sources.list' regexp='^deb http://.*/ubuntu trusty-backports main restricted universe multiverse' line='deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' backup=yes
+  when: ansible_distribution_release == 'trusty'
+
+- name: apt | lxd
+  apt: name={{item}}
+  with_items: "{{ lxd_ubuntu_packages }}"
+
