@@ -13,6 +13,8 @@ env:
     version: 16.04
   - distribution: ubuntu
     version: 14.04
+#  - distribution: ubuntu
+#    version: 12.04
 #  - distribution: alpine
 #    version: 3.4
 
@@ -21,51 +23,68 @@ before_install:
   - pwd
   - find -ls
 ## use appropriate role path and not github name
-  - ln -s ansible-adduser ../adduser && cd ../adduser
+  - ln -s ansible-lxd ../lxd && cd ../lxd
 ## No Xenial, https://github.com/travis-ci/travis-ci/issues/5821
 #  - sudo apt install lxd
   - echo "deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse" | sudo tee /etc/apt/sources.list.d/trusty-backports.list
   - sudo apt-get update -qq
-  - sudo apt -t trusty-backports -y install lxd -q
+  - sudo apt -t trusty-backports -y install lxd acl -q
 ## change of group implies logout+login to apply... can't do with travis = run as root (sic)
 ## https://github.com/travis-ci/travis-ci/issues/1839   or chain: sudo -E su $USER -c "..."
   - sudo usermod -G lxd travis
   # Pull container
-#  - lxc remote add images images.linuxcontainers.org
   - sudo -E su $USER -c "lxc remote list"
   - sudo -E su $USER -c "lxc image list"
+## pre-download base images
   - 'sudo -E su $USER -c "[ ${distribution} == ubuntu ] || lxc image copy images:/${distribution}/${version}/amd64 local: --alias=${distribution}-${version}"'
-  - sudo pip install ansible
-## need to use chef gem for some reason? BAD PATH https://github.com/chef/chef-dk/issues/15
-#  - chef gem install kitchen
-  - gem install kitchen
-  - gem install kitchen-ansible
-  - gem install kitchen-lxd_cli
-## Message: Unable to activate kitchen-ansible-0.45.0, because net-ssh-2.9.2 conflicts with net-ssh (~> 3.0)
-#  - chef gem uninstall net-ssh -v 2.9.2 -q ?-y
-#  - chef gem list
-  - gem list
-  - which kitchen
-#  - which chef
-#  - find /var/lib/gems $HOME/.gem /usr/local/rvm/gems /opt/chefdk/embedded/lib/ruby/gem -iname '*lxd_cli*' || true
+  - 'sudo -E su $USER -c "[ ${distribution} == ubuntu ] && lxc image copy ubuntu:${version} local: --alias=${distribution}-${version}" || true'
+## configure lxd-bridge
   - sudo perl -pi -e 's@^LXD_IPV4_ADDR=""@LXD_IPV4_ADDR="10.252.116.1"@;s@^LXD_IPV4_NETMASK=""@LXD_IPV4_NETMASK="255.255.255.0"@;s@^LXD_IPV4_NETWORK=""@LXD_IPV4_NETWORK="10.252.116.1/24"@;s@^LXD_IPV4_DHCP_RANGE=""@LXD_IPV4_DHCP_RANGE="10.252.116.2,10.252.116.254"@;s@^LXD_IPV4_DHCP_MAX=""@LXD_IPV4_DHCP_MAX="252"@;' /etc/default/lxd-bridge
 #  - cat /etc/default/lxd-bridge
 #  - service --status-all
   - sudo service lxd restart
-  - wget -q https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb && sudo dpkg -i vagrant_1.8.5_x86_64.deb
 ## ssh key for lxd_cli ?
   - ls ~/.ssh
   - ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -P ""
 ## sudo/su get us a non-usual PATH ...
-  - sudo -E su $USER -c "env"
-  - sudo -E su $USER -c "which kitchen"
-  - sudo -E su $USER -c "env PATH=/usr/local/rvm/gems/ruby-2.2.3/bin:/usr/local/rvm/gems/ruby-2.2.3@global/bin:/usr/local/rvm/rubies/ruby-2.2.3/bin:/usr/local/rvm/bin:/home/travis/bin:/home/travis/.local/bin:/home/travis/.phpenv/shims:/home/travis/.php-build/bin:/home/travis/.gimme/versions/go1.5.1.linux.amd64/bin:/home/travis/.local/bin:/home/travis/.pyenv/shims:/opt/pyenv/bin:/opt/python/2.7.10/bin:/opt/python/3.5.0/bin:/opt/python/2.6.9/bin:/opt/python/3.2.6/bin:/opt/python/3.3.6/bin:/opt/python/3.4.3/bin:/opt/python/pypy-2.6.1/bin:/opt/python/pypy3-2.4.0/bin:/home/travis/.phpenv/shims:/usr/local/phantomjs/bin:/usr/local/phantomjs:/home/travis/perl5/perlbrew/bin:/home/travis/.nvm/versions/node/v4.1.2/bin:./node_modules/.bin:/usr/local/maven-3.1.1/bin:/usr/local/gradle/bin:/usr/local/clang-3.5.0/bin:/home/travis/.gimme/versions/go1.5.1.linux.amd64/bin:/home/travis/.local/bin:/home/travis/.pyenv/shims:/opt/pyenv/bin:/opt/python/2.7.10/bin:/opt/python/3.5.0/bin:/opt/python/2.6.9/bin:/opt/python/3.2.6/bin:/opt/python/3.3.6/bin:/opt/python/3.4.3/bin:/opt/python/pypy-2.6.1/bin:/opt/python/pypy3-2.4.0/bin:/home/travis/.phpenv/shims:/usr/local/phantomjs/bin:/usr/local/phantomjs:./node_modules/.bin:/usr/local/maven-3.1.1/bin:/usr/local/gradle/bin:/usr/local/clang-3.5.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/travis/.phpenv/bin:/home/travis/.phpenv/bin kitchen diagnose --all"
-#  - sudo -E su $USER -c "kitchen diagnose --all"
-  - sudo -E -u $USER kitchen diagnose --all
+  - sudo -E su $USER -c "lxc launch ${distribution}-${version} run-${distribution}-${version//./}"
+#  - sudo -E su $USER -c "lxc start run-${distribution}-${version//./}"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- dhclient eth0"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ping -c 1 8.8.8.8"
+  - '[ "X${distribution}" == "Xubuntu" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= apt-get update" || true'
+  - '[ "X${distribution}" == "Xubuntu" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= apt-get -y install python python-apt aptitude python-pip libssl-dev python-dev libffi-dev" || true'
+  - '[ "X${distribution}" == "Xcentos" -a "X${version}" == "X6" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm" || true'
+  - '[ "X${distribution}" == "Xcentos" -a "X${version}" == "X7" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm" || true'
+  - '[ "X${distribution}" == "Xcentos" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= yum update" || true'
+  - '[ "X${distribution}" == "Xcentos" ] && sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= yum -y install python python-pip openssl-devel python-devel libffi-devel \"@Development tools\"" || true'
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= pip install ansible"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ansible --version"
+  - "echo localhost > inventory"
+## enable ansible profiling (https://github.com/jlafon/ansible-profile)
+#  - "printf '[defaults]\ncallback_whitelist = profile_tasks' > ansible.cfg"
+#  - sudo -E su $USER -c "lxc file push inventory ansible.cfg run-${distribution}-${version//./}/root/"
+  - sudo -E su $USER -c "lxc file push inventory run-${distribution}-${version//./}/root/"
+## these lines are necessary so lxc mount is read-write, https://github.com/lxc/lxd/issues/1879
+  - chmod -R go+w $PWD
+## OR
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./}"
+## FIXME! awk extraction is working in shell but not in travis... relying on global chmod as test ephemeral environment. DON'T USE IN PRODUCTION!
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/Hostid/ { print $13 }'"
+  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/Hostid/ { print $13 }'"`
+  - "echo setfacl -Rm user:$CUID:rwx ${PWD%/*}"
+  - "setfacl -Rm user:$CUID:rwx ${PWD%/*}"
+  - sudo -E su $USER -c "lxc config device add run-${distribution}-${version//./} sharedroles disk path=/etc/ansible/roles source=${PWD%/*}"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- mount"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- pwd"
 
 script:
-#  - KITCHEN_LOCAL_YAML=.kitchen.local.yml bundle exec kitchen verify ${INSTANCE}
-  - sudo -E su $USER -c "env PATH=/usr/local/rvm/gems/ruby-2.2.3/bin:/usr/local/rvm/gems/ruby-2.2.3@global/bin:/usr/local/rvm/rubies/ruby-2.2.3/bin:/usr/local/rvm/bin:/home/travis/bin:/home/travis/.local/bin:/home/travis/.phpenv/shims:/home/travis/.php-build/bin:/home/travis/.gimme/versions/go1.5.1.linux.amd64/bin:/home/travis/.local/bin:/home/travis/.pyenv/shims:/opt/pyenv/bin:/opt/python/2.7.10/bin:/opt/python/3.5.0/bin:/opt/python/2.6.9/bin:/opt/python/3.2.6/bin:/opt/python/3.3.6/bin:/opt/python/3.4.3/bin:/opt/python/pypy-2.6.1/bin:/opt/python/pypy3-2.4.0/bin:/home/travis/.phpenv/shims:/usr/local/phantomjs/bin:/usr/local/phantomjs:/home/travis/perl5/perlbrew/bin:/home/travis/.nvm/versions/node/v4.1.2/bin:./node_modules/.bin:/usr/local/maven-3.1.1/bin:/usr/local/gradle/bin:/usr/local/clang-3.5.0/bin:/home/travis/.gimme/versions/go1.5.1.linux.amd64/bin:/home/travis/.local/bin:/home/travis/.pyenv/shims:/opt/pyenv/bin:/opt/python/2.7.10/bin:/opt/python/3.5.0/bin:/opt/python/2.6.9/bin:/opt/python/3.2.6/bin:/opt/python/3.3.6/bin:/opt/python/3.4.3/bin:/opt/python/pypy-2.6.1/bin:/opt/python/pypy3-2.4.0/bin:/home/travis/.phpenv/shims:/usr/local/phantomjs/bin:/usr/local/phantomjs:./node_modules/.bin:/usr/local/maven-3.1.1/bin:/usr/local/gradle/bin:/usr/local/clang-3.5.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/travis/.phpenv/bin:/home/travis/.phpenv/bin kitchen verify default-${distribution}-${version//./} -l debug || (cat $HOME/.kitchen/logs/default-${distribution}-${version//./}.log; find /tmp/kitchen)"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ansible-playbook -i inventory --syntax-check /etc/ansible/roles/lxd/test/integration/default/default.yml"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= ansible-playbook -i inventory --connection=local --sudo -vvvv /etc/ansible/roles/lxd/test/integration/default/default.yml"
+## FIXME! Travis request: Build config file had a parse error: "mapping values are not allowed in this context at line 72 column 321".
+#  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= ansible-playbook -i inventory /etc/ansible/roles/lxd/test/integration/default/default.yml --connection=local --sudo | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- time env http_proxy= sh -x /etc/ansible/roles/lxd/test/integration/default/serverspec/run-local-tests.sh"
+  - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./}"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
