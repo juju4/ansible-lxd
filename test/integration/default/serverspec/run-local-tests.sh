@@ -6,6 +6,8 @@ cd $location
 v=2.3
 
 export http_proxy=
+host www.google.com
+cat /etc/resolv.conf
 
 ## docker environment in travis missing few utils
 [ -f /etc/debian_version ] && apt-get install -y curl
