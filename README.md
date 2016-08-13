@@ -12,6 +12,9 @@ It was tested on the following versions:
 ### Operating systems
 
 Tested on Ubuntu Trusty and Xenial
+Full support of LXD/LXC2 is sparsed currently if you want to run at full functionality.
+Need a recent kernel and LXD/LXC2. See this blog post from may 2015
+https://www.flockport.com/lxc-and-lxd-support-across-distributions/
 
 ## Example Playbook
 
