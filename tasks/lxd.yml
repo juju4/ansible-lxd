@@ -11,8 +11,8 @@
   service: name=lxd state=restarted
   when: lxdconf.changed and (ansible_virtualization_type is not defined or ansible_virtualization_type != "lxc")
 
-- name: ensure lxd service is started
-  service: name=lxd state=started
+- name: ensure lxd service is started and enabled
+  service: name=lxd state=started enabled=yes
 
 - name: list existing lxc images
   command: "lxc image list"
