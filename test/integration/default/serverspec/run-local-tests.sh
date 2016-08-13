@@ -5,6 +5,8 @@ location=`dirname "$0"`
 cd $location
 v=2.3
 
+export http_proxy=
+
 ## docker environment in travis missing few utils
 [ -f /etc/debian_version ] && apt-get install -y curl
 [ -f /etc/redhat-release ] && yum -y install which
