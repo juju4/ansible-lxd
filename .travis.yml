@@ -84,7 +84,11 @@ script:
 ## FIXME! Travis request: Build config file had a parse error: "mapping values are not allowed in this context at line 72 column 321".
 #  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- env http_proxy= ansible-playbook -i inventory /etc/ansible/roles/lxd/test/integration/default/default.yml --connection=local --sudo | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- time env http_proxy= sh -x /etc/ansible/roles/lxd/test/integration/default/serverspec/run-local-tests.sh"
+
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- cat /etc/apt/sources.list"
+
   - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./}"
+  - sudo -E su $USER -c "lxc delete run-${distribution}-${version//./}"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

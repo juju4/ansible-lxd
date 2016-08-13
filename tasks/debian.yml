@@ -2,7 +2,7 @@
 
 - name: apt | Enable trusty-backports if relevant
   lineinfile:
-    dest='/etc/apt/sources.list' regexp='^deb http://.*/ubuntu trusty-backports main restricted universe multiverse' line='deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' backup=yes
+    dest='/etc/apt/sources.list' regexp="^deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release }}-backports' line="deb http://\1/ubuntu\2 {{ ansible_distribution_release }}-backports main restricted universe multiverse" backup=yes
   when: ansible_distribution_release == 'trusty'
 
 - name: apt | lxd

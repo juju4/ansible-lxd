@@ -1,9 +1,9 @@
 ---
 
 - hosts: all
-#- hosts: test-kitchen
-#  vars:
-#    - a:
+  vars:
+    - lxd_preloadimages:
+    - lxd_preconfigure: []
   roles:
     - lxd
 
