@@ -5,4 +5,5 @@
   service: name=lxd state=restarted
 - name: restart lxd-bridge
   service: name=lxd-bridge state=restarted
+  when: ansible_distribution_release == 'xenial'
 
