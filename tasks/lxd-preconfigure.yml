@@ -7,6 +7,8 @@
       with_items:
         - "lxc init {{ template }} {{ guest }}"
         - "lxc start {{ guest }}"
+## mostly for images from linuxcontainers.org + centos
+        - "openssl rand -base64 48 | lxc exec {{ guest }} -- passwd root --stdin"
       when: lxclist.stdout.find(" {{ guest }} ") == -1
 
     - name: configure lxc instance {{ guest }}

@@ -6,6 +6,7 @@ lxd_bridgeconf_ipv4_network: "10.252.116.1/24"
 lxd_bridgeconf_ipv4_dhcp_range: "10.252.116.2,10.252.116.200"
 lxd_bridgeconf_ipv4_dhcp_max: 199
 lxd_bridgeconf_ipv4_nat: true
+lxd_bridgeconf_ipv6_proxy: false
 
 lxd_preloadimages:
     - { i: 'ubuntu:16.04', alias: 'ubuntu-16.04-nopython' }

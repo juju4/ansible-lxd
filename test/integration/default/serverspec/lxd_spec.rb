@@ -3,6 +3,7 @@ require 'serverspec'
 # Required by serverspec
 set :backend, :exec
 
+## FIXME! running test fails on travis/xenial: https://travis-ci.org/juju4/ansible-lxd/jobs/152119834
 describe service('lxd') do  
   it { should be_enabled   }
   it { should be_running   }

@@ -53,6 +53,18 @@ $ vagrant ssh
 
 ## Troubleshooting & Known issues
 
+* for network connectivity
+check if http_proxy is set (usually from /etc/default/lxd-bridge proxy settings)
+check iptables nat config for masquerading
+```
+# iptables -t nat -L
+## if empty
+# iptables -t nat -A POSTROUTING -s 10.x.y.0/24 -o eth0 -j MASQUERADE
+```
+* if you want to forward traffic external to host to one of the private lxc container
+```
+# iptables -t nat -A PREROUTING -i if_incoming -p tcp --dport port_incoming -j DNAT --to-destination container_ip:container_port
+```
 
 ## License
 

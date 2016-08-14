@@ -31,9 +31,11 @@
   changed_when: false
   register: lxclist
 
-- name: pre-configure lxc images
-  include: "lxd-preconfigure.yml imagelist={{ imagelist2 }} lxclist={{ lxclist }} guest={{ outer_item.guest }} template={{ outer_item.template }} publishalias={{ outer_item.publishalias }} shellcmds={{ outer_item.shellcmds }}"
-  with_items: "{{ lxd_preconfigure }}"
-  loop_control:
-    loop_var: outer_item
+- block:
+    - name: pre-configure lxc images
+      include: "lxd-preconfigure.yml imagelist={{ imagelist2 }} lxclist={{ lxclist }} guest={{ outer_item.guest }} template={{ outer_item.template }} publishalias={{ outer_item.publishalias }} shellcmds={{ outer_item.shellcmds }}"
+      with_items: "{{ lxd_preconfigure }}"
+      loop_control:
+        loop_var: outer_item
+  when: lxd_preconfigure is defined and lxd_preconfigure != '' and lxd_preconfigure != []
 
