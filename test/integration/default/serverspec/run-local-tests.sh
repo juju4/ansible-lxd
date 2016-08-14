@@ -34,3 +34,6 @@ else
     bash -l -c "bundle exec rake spec"
 fi
 
+systemctl status lxd
+ps axu | grep lxd
+
