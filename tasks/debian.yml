@@ -4,8 +4,16 @@
     - name: apt | Enable trusty-backports if relevant
       lineinfile:
         dest='/etc/apt/sources.list' regexp='^deb http://.*/ubuntu trusty-backports main restricted universe multiverse' line='deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse' backup=yes
+    - name: apt | update cache
+      apt: update_cache=yes
+    - name: apt | manual install of lxd
+      command: "env DEBIAN_FRONTEND=noninteractive apt-get -t trusty-backports -y install lxd"
     - name: apt | lxd
-      apt: name={{item}} update_cache=yes default_release='trusty-backports'
+## FIXME! ansible not supporting all targets
+## {"failed": true, "item": ["lxd", "python-pip", "sqlite3"], "module_stderr": "", "module_stdout": "Traceback (most recent call last):\r\n  File \"/tmp/ansible_w_w1mO/ansible_module_apt.py\", line 843, in <module>\r\n    main()\r\n  File \"/tmp/ansible_w_w1mO/ansible_module_apt.py\", line 742, in main\r\n    cache.open(progress=None)\r\n  File \"/usr/lib/python2.7/dist-packages/apt/cache.py\", line 151, in open\r\n    self._cache = apt_pkg.Cache(progress)\r\nSystemError: E:The value 'trusty-backports' is invalid for APT::Default-Release as such a release is not available in the sources\r\n", "msg": "MODULE FAILURE", "parsed": false}
+#      apt: name={{item}} update_cache=yes default_release='trusty-backports'
+## The following packages have unmet dependencies: lxd ...
+      apt: name={{item}}
       with_items: "{{ lxd_ubuntu_packages }}"
   when: ansible_distribution_release == 'trusty'
 
