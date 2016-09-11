@@ -9,33 +9,27 @@
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network
   service: name=lxd state=restarted
-  when: lxdconf.changed and (ansible_virtualization_type is not defined or ansible_virtualization_type != "lxc")
+  when: lxdconf.changed and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "kvm"))
+## centos7/vagrant/virtualbox
+  ignore_errors: true
 
+- shell: "ps axu |grep [l]xd"
+  changed_when: false
+  register: ps
+  ignore_errors: true
+- debug: var=ps
+
+## FIXME! idempotency issue on xenial: lxd fault at first run / lxd in lxd impact?
+- debug: var=ansible_virtualization_type
 - name: ensure lxd service is started and enabled
   service: name=lxd state=started enabled=yes
+  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "kvm"))
+## centos7/vagrant/virtualbox
+  ignore_errors: true
 
-- name: list existing lxc images
-  command: "lxc image list"
+- shell: "ps axu |grep [l]xd"
   changed_when: false
-  register: imagelist
-- name: pre copy lxc images
-  include: "lxc-image-copy.yml current={{ imagelist }} image={{ item.i }} alias={{ item.alias }}"
-  with_items: "{{ lxd_preloadimages }}"
-
-- name: list existing lxc images
-  command: "lxc image list"
-  changed_when: false
-  register: imagelist2
-- name: list existing lxc instances
-  command: "lxc list"
-  changed_when: false
-  register: lxclist
-
-- block:
-    - name: pre-configure lxc images
-      include: "lxd-preconfigure.yml imagelist={{ imagelist2 }} lxclist={{ lxclist }} guest={{ outer_item.guest }} template={{ outer_item.template }} publishalias={{ outer_item.publishalias }} shellcmds={{ outer_item.shellcmds }}"
-      with_items: "{{ lxd_preconfigure }}"
-      loop_control:
-        loop_var: outer_item
-  when: lxd_preconfigure is defined and lxd_preconfigure != '' and lxd_preconfigure != []
+  register: ps
+  ignore_errors: true
+- debug: var=ps
 

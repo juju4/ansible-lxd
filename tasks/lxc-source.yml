@@ -1,0 +1,17 @@
+---
+
+- name: retrieve lxc source
+  get_url: url=https://linuxcontainers.org/downloads/lxc/lxc-2.0.4.tar.gz dest=/root/lxc-2.0.4.tar.gz mode=0600 checksum='sha256:14c9e699a4bf4e23a420922eb5ae3e163bb151c3d2bf6a3dcbea48c2dd3e9582'
+- name: uncompress lxc archive
+  unarchive: src=/root/lxc-2.0.4.tar.gz dest=/root/ creates=/root/lxc-2.0.4/README
+## Cannot change ownership to uid 201105, gid 200512
+  ignore_errors: true
+
+- name: build lxc
+  command: "{{ item }} chdir=/root/lxc-2.0.4 creates=/usr/local/bin/lxc-create"
+  with_items:
+    - ./autogen.sh
+    - ./configure
+    - make
+    - make install
+

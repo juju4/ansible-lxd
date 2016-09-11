@@ -1,0 +1,53 @@
+---
+
+- name: Ensure GOPATH dir exists
+  file: dest=/root/go state=directory mode=0755
+
+- name: retrieve lxd go source
+  command: "go get github.com/lxc/lxd creates=/root/go/src/github.com/lxc/lxd"
+  environment:
+    GOPATH: /root/go
+- name: build lxd go source
+  command: "make chdir=/root/go/src/github.com/lxc/lxd creates=/root/go/bin/lxd"
+  environment:
+    GOPATH: /root/go
+    PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
+- name: copy go executables to /usr/local/bin
+  copy: "src=/root/go/bin/{{ item }} dest=/usr/bin mode=0755"
+  with_items:
+    - lxc
+    - lxd
+    - lxd-benchmark
+    - lxd-bridge-proxy
+    - fuidshift
+
+- name: add /usr/local/lib to ld.so.conf
+  lineinfile: dest=/etc/ld.so.conf.d/usr-local.conf line='/usr/local/lib' mode=0644 create=yes
+  notify:
+    - ldconfig reload
+  register: ldso
+
+## Note: those commands may work only after notify/services reload, so we flush
+- meta: flush_handlers
+#- name: force ldconfig reload for consecutive tasks
+#  command: "ldconfig"
+#  when: ldso.changed
+
+- name: define uid/gid for containers
+  lineinfile: dest={{ item }} line='^root:1000000:65536' backup=yes create=yes
+  with_items:
+    - /etc/subuid
+    - /etc/subgid
+
+
+#~/go/bin/lxd daemon
+#~/go/bin/lxd-benchmark spawn --count=5
+#Failed to spawn container 'benchmark-2': Failed to change ownership of: /var/lib/lxd/containers/benchmark-2/rootfs
+
+#[root@c7 ~]# ~/go/bin/lxc launch images:alpine/3.4/amd64
+#Creating expert-terrapin
+#Retrieving image: 100%
+#error: Failed to change ownership of: /var/lib/lxd/containers/expert-terrapin/rootfs
+#[root@c7 ~]# ls -l /var/lib/lxd/containers/
+#total 0
+

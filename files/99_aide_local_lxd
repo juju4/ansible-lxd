@@ -1,0 +1,14 @@
+## /etc/aide/aide.conf.d
+/var/lib/lxcfs$ VarDir
+/var/lib/lxd$ VarDir
+/var/lib/lxd-bridge$ VarDir
+/var/lib/lxd-bridge/dnsmasq.lxdbr0.leases$ VarFile
+!/var/lib/lxcfs/cgroup
+!/var/lib/lxcfs/proc
+!/var/lib/lxd/shmounts
+!/var/lib/lxd/containers
+## each of those dir has an entry per container
+!/var/lib/lxd/devices/
+!/var/lib/lxd/security/apparmor/cache
+!var/lib/lxd/security/apparmor/profiles
+!/var/lib/lxd/security/seccomp

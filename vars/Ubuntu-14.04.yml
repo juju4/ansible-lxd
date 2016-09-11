@@ -1,6 +1,6 @@
 ---
 
-lxd_ubuntu_packages:
+lxd_packages:
     - lxd
     - python-pip
     - sqlite3

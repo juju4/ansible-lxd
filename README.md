@@ -1,7 +1,10 @@
 [![Build Status](https://travis-ci.org/juju4/ansible-lxd.svg?branch=master)](https://travis-ci.org/juju4/ansible-lxd)
 # LXD ansible role
 
-Ansible role to setup LXD, its bridge, pre-copy images and eventually pre-configure some.
+Ansible role to install LXD only and do network configuration.
+https://linuxcontainers.org/lxd/getting-started-cli/
+
+Containers configuration or publishing is done in separated roles.
 
 ## Requirements & Dependencies
 
@@ -64,6 +67,13 @@ check iptables nat config for masquerading
 * if you want to forward traffic external to host to one of the private lxc container
 ```
 # iptables -t nat -A PREROUTING -i if_incoming -p tcp --dport port_incoming -j DNAT --to-destination container_ip:container_port
+```
+
+* role can be executed on centos/redhat system on containers as kernel is host's
+but RHEL/CentOS 7 has kernel 3.10 which is ?not compatible with LXC.
+* service command on centos7 stalling
+```
+$ /bin/systemctl start lxd
 ```
 
 ## License

@@ -1,0 +1,31 @@
+---
+
+lxd_packages:
+    - perl
+    - libvirt
+## RedHat7 = 1.0.8. LXD required 1.1+
+#    - lxc
+#    - lxc-templates
+## lxd source build
+    - golang
+    - criu
+    - acl
+    - git
+    - lvm2-devel
+    - btrfs-progs-devel
+    - squashfs-tools
+    - "@Development tools"
+## lxd testsuite
+    - curl
+    - gettext
+#    - jq
+    - sqlite
+#    - uuid-runtime
+#    - pyflakes
+#    - pep8
+#    - shellcheck 
+    - bzr
+## lxcfs
+    - fuse-devel
+    - pam-devel
+
