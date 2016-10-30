@@ -14,7 +14,11 @@ LXD_BRIDGE="lxdbr0"
 UPDATE_PROFILE="true"
 
 # Path to an extra dnsmasq configuration file
+{% if lxd_dnsmasq_conf is defined and lxd_dnsmasq_conf %}
+LXD_CONFILE="/etc/lxc/lxc-dnsmasq-hosts.conf"
+{% else %}
 LXD_CONFILE=""
+{% endif %}
 
 # DNS domain for the bridge
 LXD_DOMAIN="lxd"

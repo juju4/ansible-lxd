@@ -19,10 +19,15 @@
   when: ansible_distribution_release == 'trusty'
 
 - name: apt | lxd
-  apt: name={{item}}
+  apt: name={{item}} state=present
   with_items: "{{ lxd_packages }}"
 
-- file: dest=/etc/aide/aide.conf.d state=directory mode=0755
+- name: apt | zfs denpendencies
+  apt: name=zfsutils-linux state=present
+  when: lxd_with_zfs_backend is defined and lxd_with_zfs_backend
+
+- name: ensure aide.conf.d directory exists
+  file: dest=/etc/aide/aide.conf.d state=directory mode=0755
 - name: add additional aide HIDS configuration
   copy: src=99_aide_local_lxd dest=/etc/aide/aide.conf.d/99_aide_local_lxd mode=0644
 

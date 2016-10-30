@@ -1,5 +1,10 @@
 ---
 
+## don't reboot system if needed
+lxd_noreboot: false
+
+lxd_with_zfs_backend: false
+
 lxd_bridgeconf_ipv4_addr: "10.252.116.1"
 lxd_bridgeconf_ipv4_netmask: "255.255.255.0"
 lxd_bridgeconf_ipv4_network: "10.252.116.1/24"
@@ -8,29 +13,11 @@ lxd_bridgeconf_ipv4_dhcp_max: 199
 lxd_bridgeconf_ipv4_nat: true
 lxd_bridgeconf_ipv6_proxy: false
 
-lxd_preloadimages:
-    - { i: 'ubuntu:16.04', alias: 'ubuntu-16.04-nopython' }
-    - { i: 'ubuntu:14.04', alias: 'ubuntu-14.04' }
-    - { i: 'ubuntu:12.04', alias: 'ubuntu-12.04' }
-    - { i: 'images:/centos/7/amd64', alias: 'centos-7-nossh' }
-    - { i: 'images:/centos/6/amd64', alias: 'centos-6-nossh' }
+lxd_dnsmasq_conf: false
+lxd_dnsmasq_staticips: []
 
-lxd_preconfigure: [
-        { guest: 'default-ubuntu-1604', template: 'ubuntu-16.04-nopython', publishalias: 'ubuntu-16.04', shellcmds: [
-            "dhclient eth0",
-            "ping -c 1 8.8.8.8",
-            "apt-get install -y python"
-            ]
-        },
-        { guest: 'default-centos-7', template: 'centos-7-nossh', publishalias: 'centos-7', shellcmds: [
-            "dhclient eth0",
-            "ping -c 1 8.8.8.8",
-## for some reason, lxc has http_proxy set: 'Could not resolve proxy: fe80::1%eth0]'
-            "yum install -y openssh-server sudo",
-            "systemctl enable sshd",
-            "systemctl start sshd",
-            "mkdir /root/.ssh",
-#            "openssl rand -base64 32 | passwd root --stdin"
-            ]
-        }
-    ]
+## https://github.com/lxc/lxd/issues/1229, increase required if using nesting
+lxd_subid_start: 100000
+lxd_subid_range: 65536
+#lxd_subid_range: 1065536
+

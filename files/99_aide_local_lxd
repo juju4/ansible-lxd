@@ -8,7 +8,7 @@
 !/var/lib/lxd/shmounts
 !/var/lib/lxd/containers
 ## each of those dir has an entry per container
-!/var/lib/lxd/devices/
+!/var/lib/lxd/devices
 !/var/lib/lxd/security/apparmor/cache
-!var/lib/lxd/security/apparmor/profiles
+!/var/lib/lxd/security/apparmor/profiles
 !/var/lib/lxd/security/seccomp
