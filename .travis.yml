@@ -24,7 +24,7 @@ before_install:
   - find -ls
 ## use appropriate role path and not github name
   - ln -s ansible-lxd ../lxd && cd ../lxd
-  - git clone https://github.com/juju4/ansible-redhat-epel ../redhat-epel
+  - ./get-dependencies.sh
 ## No Xenial, https://github.com/travis-ci/travis-ci/issues/5821
 #  - sudo apt install lxd
   - echo "deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse" | sudo tee /etc/apt/sources.list.d/trusty-backports.list
