@@ -9,7 +9,7 @@
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network
   service: name=lxd state=restarted
-  when: lxdconf.changed and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "kvm"))
+  when: lxdconf.changed and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
 ## centos7/vagrant/virtualbox
   ignore_errors: true
 
@@ -38,7 +38,7 @@
 - debug: var=ansible_virtualization_type
 - name: ensure lxd service is started and enabled
   service: name=lxd state=started enabled=yes
-  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "kvm"))
+  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
 ## centos7/vagrant/virtualbox
   ignore_errors: true
 
@@ -61,6 +61,7 @@
       when: file.stat.exists is defined and file.stat.exists == true and not (lxd_noreboot is defined and lxd_noreboot)
       async: 0
       poll: 0
+      ignore_errors: true
     - name: waiting for server to come back
       local_action: wait_for host={{ inventory_hostname }} state=started
       become: false
@@ -70,5 +71,5 @@
 ## REVIEW needed: https://github.com/lxc/lxd/blob/master/doc/production-setup.md
 - name: increase fs.inotify.max_user_instances (default 128)
   sysctl: name="fs.inotify.max_user_instances" value=1048576 sysctl_set=yes state=present reload=yes
-  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "kvm"))
+  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
 
