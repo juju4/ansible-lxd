@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/juju4/ansible-lxd.svg?branch=master)](https://travis-ci.org/juju4/ansible-lxd)
+[![Build Status - Master](https://travis-ci.org/juju4/ansible-lxd.svg?branch=master)](https://travis-ci.org/juju4/ansible-lxd)
+[![Build Status - Devel](https://travis-ci.org/juju4/ansible-lxd.svg?branch=devel)](https://travis-ci.org/juju4/ansible-lxd/branches)
 # LXD ansible role
 
 Ansible role to install LXD only and do network configuration.
@@ -11,6 +12,7 @@ Containers configuration or publishing is done in separated roles.
 ### Ansible
 It was tested on the following versions:
  * 2.0
+ * 2.2
 
 ### Operating systems
 
@@ -27,7 +29,7 @@ For example
 ```
 - host: all
   roles:
-    - lxd
+    - juju4.lxd
 ```
 
 ## Variables
@@ -40,7 +42,7 @@ This role has a travis test calling kitchen with lxd (for github), kitchen local
 
 Once you ensured all necessary roles are present, You can test with:
 ```
-$ cd /path/to/roles/lxd
+$ cd /path/to/roles/juju4.lxd
 ## lxd backend
 $ kitchen verify
 $ kitchen login
@@ -49,7 +51,7 @@ $ KITCHEN_YAML=".kitchen.vagrant.yml" kitchen verify
 ```
 or
 ```
-$ cd /path/to/roles/lxd/test/vagrant
+$ cd /path/to/roles/juju4.lxd/test/vagrant
 $ vagrant up
 $ vagrant ssh
 ```
