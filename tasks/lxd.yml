@@ -66,7 +66,7 @@
       local_action: wait_for host={{ inventory_hostname }} state=started
       become: false
       when: file.stat.exists is defined and file.stat.exists == true and not (lxd_noreboot is defined and lxd_noreboot)
-  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc")) and (travisci is not defined or travisci == false)
 
 ## REVIEW needed: https://github.com/lxc/lxd/blob/master/doc/production-setup.md
 - name: increase fs.inotify.max_user_instances (default 128)

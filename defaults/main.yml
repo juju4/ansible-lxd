@@ -1,7 +1,7 @@
 ---
 
 ## don't reboot system if needed
-lxd_noreboot: false
+lxd_noreboot: true
 
 lxd_with_zfs_backend: false
 
