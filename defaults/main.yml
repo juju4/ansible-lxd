@@ -5,6 +5,8 @@ lxd_noreboot: true
 
 lxd_with_zfs_backend: false
 
+lxd_bridgeconf_use_bridge: "true"
+lxd_bridgeconf_bridge: "lxdbr0"
 lxd_bridgeconf_ipv4_addr: "10.252.116.1"
 lxd_bridgeconf_ipv4_netmask: "255.255.255.0"
 lxd_bridgeconf_ipv4_network: "10.252.116.1/24"
