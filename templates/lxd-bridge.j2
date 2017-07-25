@@ -3,12 +3,12 @@
 # It is recommended to update it by using "dpkg-reconfigure -p medium lxd"
 
 # Whether to setup a new bridge or use an existing one
-USE_LXD_BRIDGE="true"
+USE_LXD_BRIDGE="{{ lxd_bridgeconf_use_bridge }}"
 
 # Bridge name
 # This is still used even if USE_LXD_BRIDGE is set to false
 # set to an empty value to fully disable
-LXD_BRIDGE="lxdbr0"
+LXD_BRIDGE="{{ lxd_bridgeconf_bridge }}"
 
 # Update the "default" LXD profile
 UPDATE_PROFILE="true"
