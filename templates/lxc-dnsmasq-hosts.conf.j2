@@ -1,3 +1,4 @@
+# {{ ansible_managed }}
 {% if lxd_dnsmasq_staticips is defined and lxd_dnsmasq_staticips != [] %}
 ## note: it's container hostname which is important, not container's name!
 {% for item in lxd_dnsmasq_staticips %}
