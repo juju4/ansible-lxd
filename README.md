@@ -13,6 +13,7 @@ Containers configuration or publishing is done in separated roles.
 It was tested on the following versions:
  * 2.0
  * 2.2
+ * 2.5
 
 ### Operating systems
 
