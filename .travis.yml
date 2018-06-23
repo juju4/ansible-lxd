@@ -7,8 +7,10 @@ rvm:
 env:
 #  - distribution: centos
 #    version: 6
-#  - distribution: centos
-#    version: 7
+  - distribution: centos
+    version: 7
+    ansible_version: 2.5.3.0
+    cryptography_version: 2.2.2
   - distribution: ubuntu
     version: 18.04
     ansible_version: 2.5.3.0

@@ -1,0 +1,76 @@
+---
+https://discuss.linuxcontainers.org/t/lxd-on-centos-7/1250
+
+- name: RedHat7 | lxd dependencies install
+  yum:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items: "{{ lxd_packages }}"
+
+- name: RedHat7 | Enable ngompa/snapcore-el7 copr
+  command: "dnf copr enable -y ngompa/snapcore-el7"
+  args:
+    creates: /etc/yum.repos.d/_copr_@gift-stable.repo
+  warn: no
+
+- name: RedHat7 | Ensure snapd is present
+  yum:
+    name: snapd
+    state: present
+    update_cache: yes
+
+- name: RedHat7 | Ensure snapd.socket is enabled and started
+  service:
+    name: snapd.socket
+    enabled: yes
+    state: started
+
+- name: RedHat7 | Configure ZFS repository
+  command: "{{ item }}"
+  with_items:
+    - yum-config-manager --disable zfs
+    - yum-config-manager --enable zfs-kmod
+
+- name: RedHat7 | Ensure ZFS is present
+  yum:
+    name: zfs
+    state: present
+    update_cache: yes
+
+- name: RedHat7 | Configure Kernel
+  command: "{{ item }}"
+  with_items:
+    - grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
+    - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"
+  register: kernelconf
+
+- name: RedHat7 | Configure user.max_user_namespaces
+  sysctl:
+    name: user.max_user_namespaces
+    value: 3883
+    sysctl_file: /etc/sysctl.d/99-userns.conf
+    reload: yes
+
+- name: RedHat7 | reboot
+  command: /sbin/reboot
+  async: 0
+  poll: 0
+  ignore_errors: true
+  when: kernelconf is changed
+
+- name: RedHat7 | Wait for system to be back online
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  when: kernelconf is changed
+
+# https://github.com/ansible/ansible/issues/39155
+# https://github.com/wekan/wekan-snap/wiki/Install-snap-with-Ansible
+
+- name: RedHat7 | install lxd with snap
+  command: snap install lxd
+  args:
+    creates: /xyz
