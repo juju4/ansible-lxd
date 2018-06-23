@@ -1,5 +1,5 @@
 ---
-https://discuss.linuxcontainers.org/t/lxd-on-centos-7/1250
+# https://discuss.linuxcontainers.org/t/lxd-on-centos-7/1250
 
 - name: RedHat7 | lxd dependencies install
   yum:
