@@ -9,19 +9,19 @@ env:
 #    version: 6
   - distribution: centos
     version: 7
-    ansible_version: 2.5.3.0
+    ansible_version: 2.6.0
     cryptography_version: 2.2.2
   - distribution: ubuntu
     version: 18.04
-    ansible_version: 2.5.3.0
+    ansible_version: 2.6.0
     cryptography_version: 2.2.2
   - distribution: ubuntu
     version: 16.04
-    ansible_version: 2.5.3.0
+    ansible_version: 2.6.0
     cryptography_version: 2.2.2
   - distribution: ubuntu
     version: 14.04
-    ansible_version: 2.5.3.0
+    ansible_version: 2.6.0
     cryptography_version: 2.0.3
 #  - distribution: ubuntu
 #    version: 12.04
@@ -30,7 +30,7 @@ env:
 ## past ansible versions
   - distribution: ubuntu
     version: 16.04
-    ansible_version: 2.4.4.0
+    ansible_version: 2.5.5.0
     cryptography_version: 2.2.2
 
 before_install:
