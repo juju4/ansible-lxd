@@ -12,7 +12,7 @@
   command: "dnf copr enable -y ngompa/snapcore-el7"
   args:
     creates: /etc/yum.repos.d/_copr_@gift-stable.repo
-  warn: no
+    warn: False
 
 - name: RedHat7 | Ensure snapd is present
   yum:
