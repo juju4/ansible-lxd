@@ -22,4 +22,3 @@ lxd_dnsmasq_staticips: []
 lxd_subid_start: 100000
 lxd_subid_range: 65536
 #lxd_subid_range: 1065536
-

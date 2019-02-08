@@ -1,16 +1,20 @@
 ---
 - name: restart monit
   service: name=monit state=restarted
+
 - name: restart lxd
   service: name=lxd state=restarted
   when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
 ## centos7/vagrant/virtualbox
   ignore_errors: true
+
 - name: restart lxd-bridge
   service: name=lxd-bridge state=restarted
-  when: ansible_distribution_release == 'xenial' and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
+  when: >
+    ansible_distribution_release == 'xenial' and
+    (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
 ## centos7/vagrant/virtualbox
   ignore_errors: true
+
 - name: ldconfig reload
   command: ldconfig
-

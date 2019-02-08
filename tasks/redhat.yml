@@ -1,8 +1,9 @@
 ---
 
 - name: yum | lxd dependencies install
-  yum: name={{item}} state=present update_cache=yes
-  with_items: "{{ lxd_packages }}"
+  yum: name={{ lxd_packages }} state=present update_cache=yes
+  register: pkg_result
+  until: pkg_result is success
 
 - name: Ensure lxd group exists
   group: name=lxd state=present
@@ -12,7 +13,11 @@
 - include: lxd-source.yml
 
 - name: retrieve lxd debian package source
-  get_url: url=http://archive.ubuntu.com/ubuntu/pool/main/l/lxd/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz dest=/root/ mode=0600 checksum='sha256:bdac42398a5b68e863eecc463438434d635d322ef2b305b0089555d728845b28'
+  get_url:
+    url: http://archive.ubuntu.com/ubuntu/pool/main/l/lxd/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
+    checksum: 'sha256:bdac42398a5b68e863eecc463438434d635d322ef2b305b0089555d728845b28'
+    dest: /root/
+    mode: 0600
 - name: uncompress lxd debian package archive
   unarchive: src=/root/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz dest=/root/
 
@@ -42,6 +47,4 @@
     - { s: 'go/src/github.com/lxc/lxd/lxd-bridge/lxd-bridge', d: '/usr/lib/lxd' }
 
 - name: Redhat | Ensure services are enabled
-  service: "name={{ item }} enabled=yes"
-  with_items:
-    - lxd
+  service: "name=lxd enabled=yes"

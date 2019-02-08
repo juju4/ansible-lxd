@@ -4,4 +4,3 @@ lxd_packages:
     - lxd
     - python-pip
     - sqlite3
-

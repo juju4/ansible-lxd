@@ -3,34 +3,43 @@
 - block:
     - name: Ubuntu | Enable backports (replace)
       replace:
-        dest='/etc/apt/sources.list' regexp='^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release }}-backports' replace='deb http://\1/ubuntu\2 {{ ansible_distribution_release }}-backports' backup=yes
+        dest: '/etc/apt/sources.list'
+        regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release }}-backports'
+        replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release }}-backports'
+        backup: yes
       register: backports1
     - name: Ubuntu | Enable backports (line)
       lineinfile:
-        dest='/etc/apt/sources.list' regexp='^deb http://.*/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse' line='deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse' backup=yes
+        dest: '/etc/apt/sources.list'
+        regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse'
+        line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse'
+        backup: yes
       register: backports2
 
     - name: apt | update cache
       apt: update_cache=yes
       when: backports1.changed or backports2.changed
     - name: apt | manual install of lxd
-      command: "env DEBIAN_FRONTEND=noninteractive apt-get -t trusty-backports -y install lxd creates=/usr/bin/lxd"
-## FIXME! ansible not supporting all targets
-## {"failed": true, "item": ["lxd", "python-pip", "sqlite3"], "module_stderr": "", "module_stdout": "Traceback (most recent call last):\r\n  File \"/tmp/ansible_w_w1mO/ansible_module_apt.py\", line 843, in <module>\r\n    main()\r\n  File \"/tmp/ansible_w_w1mO/ansible_module_apt.py\", line 742, in main\r\n    cache.open(progress=None)\r\n  File \"/usr/lib/python2.7/dist-packages/apt/cache.py\", line 151, in open\r\n    self._cache = apt_pkg.Cache(progress)\r\nSystemError: E:The value 'trusty-backports' is invalid for APT::Default-Release as such a release is not available in the sources\r\n", "msg": "MODULE FAILURE", "parsed": false}
+      command: "env DEBIAN_FRONTEND=noninteractive apt-get -t trusty-backports -y install lxd"
+      args:
+        creates: /usr/bin/lxd
 #      apt: name={{item}} update_cache=yes default_release='trusty-backports'
 ## The following packages have unmet dependencies: lxd ...
   when: ansible_distribution_release == 'trusty'
 
 - name: apt | lxd
-  apt: name={{item}} state=present
-  with_items: "{{ lxd_packages }}"
+  apt: name={{ lxd_packages }} state=present
+  register: pkg_result
+  until: pkg_result is success
 
 - name: apt | zfs denpendencies
   apt: name=zfsutils-linux state=present
   when: lxd_with_zfs_backend is defined and lxd_with_zfs_backend
+  register: pkg_result
+  until: pkg_result is success
 
 - name: ensure aide.conf.d directory exists
   file: dest=/etc/aide/aide.conf.d state=directory mode=0755
+
 - name: add additional aide HIDS configuration
   copy: src=99_aide_local_lxd dest=/etc/aide/aide.conf.d/99_aide_local_lxd mode=0644
-

@@ -9,7 +9,11 @@
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network
   service: name=lxd state=restarted
-  when: lxdconf.changed and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
+  when: >
+    lxdconf.changed and
+    (ansible_virtualization_type is not defined or
+      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    )
 ## centos7/vagrant/virtualbox
   ignore_errors: true
 
@@ -22,7 +26,11 @@
   when: lxd_dnsmasq_conf is defined and lxd_dnsmasq_conf
 
 - name: increase subuid/gid
-  replace: dest={{ item }} regexp='^(.*):([0-9]*):([0-9]*)$', replace="\\1:{{ lxd_subid_start }}:{{ lxd_subid_range }}" backup=yes
+  replace:
+    dest: "{{ item }}"
+    regexp: '^(.*):([0-9]*):([0-9]*)$'
+    replace: "\\1:{{ lxd_subid_start }}:{{ lxd_subid_range }}"
+    backup: yes
   with_items:
     - /etc/subuid
     - /etc/subgid
@@ -38,7 +46,10 @@
 - debug: var=ansible_virtualization_type
 - name: ensure lxd service is started and enabled
   service: name=lxd state=started enabled=yes
-  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
+  when: >
+    (ansible_virtualization_type is not defined or
+      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    )
 ## centos7/vagrant/virtualbox
   ignore_errors: true
 
@@ -66,10 +77,20 @@
       local_action: wait_for host={{ inventory_hostname }} state=started
       become: false
       when: file.stat.exists is defined and file.stat.exists == true and not (lxd_noreboot is defined and lxd_noreboot)
-  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc")) and (travisci is not defined or travisci == false)
+  when: >
+    (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and
+    (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc")) and
+    (travisci is not defined or travisci == false)
 
 ## REVIEW needed: https://github.com/lxc/lxd/blob/master/doc/production-setup.md
 - name: increase fs.inotify.max_user_instances (default 128)
-  sysctl: name="fs.inotify.max_user_instances" value=1048576 sysctl_set=yes state=present reload=yes
-  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
-
+  sysctl:
+    name: "fs.inotify.max_user_instances"
+    value: 1048576
+    sysctl_set: yes
+    state: present
+    reload: yes
+  when: >
+    (ansible_virtualization_type is not defined or
+      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    )

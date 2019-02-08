@@ -8,7 +8,10 @@
   environment:
     GOPATH: /root/go
 - name: build lxd go source
-  command: "make chdir=/root/go/src/github.com/lxc/lxd creates=/root/go/bin/lxd"
+  command: "make"
+  args:
+    chdir: /root/go/src/github.com/lxc/lxd
+    creates: /root/go/bin/lxd
   environment:
     GOPATH: /root/go
     PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
@@ -22,7 +25,11 @@
     - fuidshift
 
 - name: add /usr/local/lib to ld.so.conf
-  lineinfile: dest=/etc/ld.so.conf.d/usr-local.conf line='/usr/local/lib' mode=0644 create=yes
+  lineinfile:
+    dest: /etc/ld.so.conf.d/usr-local.conf
+    line: '/usr/local/lib'
+    mode: '0644'
+    create: yes
   notify:
     - ldconfig reload
   register: ldso
@@ -39,7 +46,6 @@
     - /etc/subuid
     - /etc/subgid
 
-
 #~/go/bin/lxd daemon
 #~/go/bin/lxd-benchmark spawn --count=5
 #Failed to spawn container 'benchmark-2': Failed to change ownership of: /var/lib/lxd/containers/benchmark-2/rootfs
@@ -50,4 +56,3 @@
 #error: Failed to change ownership of: /var/lib/lxd/containers/expert-terrapin/rootfs
 #[root@c7 ~]# ls -l /var/lib/lxd/containers/
 #total 0
-

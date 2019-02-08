@@ -25,9 +25,3 @@
         - "lxc publish {{ guest }} --alias {{ publishalias }}"
         - "lxc delete {{ guest }}"
   when: imagelist.stdout.find(" {{ publishalias }} ") == -1
-
-
-
-
-
-

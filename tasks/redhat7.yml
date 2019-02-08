@@ -3,10 +3,11 @@
 
 - name: RedHat7 | lxd dependencies install
   yum:
-    name: "{{item}}"
+    name: "{{ lxd_packages }}"
     state: present
     update_cache: yes
-  with_items: "{{ lxd_packages }}"
+  register: pkg_result
+  until: pkg_result is success
 
 - name: RedHat7 | Enable ngompa/snapcore-el7 copr
   command: "dnf copr enable -y ngompa/snapcore-el7"
@@ -19,6 +20,8 @@
     name: snapd
     state: present
     update_cache: yes
+  register: pkg_result
+  until: pkg_result is success
 
 - name: RedHat7 | Ensure snapd.socket is enabled and started
   service:
@@ -37,6 +40,8 @@
     name: zfs
     state: present
     update_cache: yes
+  register: pkg_result
+  until: pkg_result is success
 
 - name: RedHat7 | Configure Kernel
   command: "{{ item }}"
