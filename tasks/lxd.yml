@@ -77,7 +77,7 @@
       wait_for:
         host: "{{ inventory_hostname }}"
         state: started
-      delegate: localhost
+      delegate_to: localhost
       become: false
       when: file.stat.exists is defined and file.stat.exists and not (lxd_noreboot is defined and lxd_noreboot)
   when: >
