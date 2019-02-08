@@ -41,7 +41,11 @@
 #  when: ldso.changed
 
 - name: define uid/gid for containers
-  lineinfile: dest={{ item }} line='^root:1000000:65536' backup=yes create=yes
+  lineinfile:
+    dest: "{{ item }}"
+    line: '^root:1000000:65536'
+    backup: yes
+    create: yes
   with_items:
     - /etc/subuid
     - /etc/subgid

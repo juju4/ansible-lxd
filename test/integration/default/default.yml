@@ -8,4 +8,3 @@
     - lxd_bridgeconf_ipv4_dhcp_range: "10.252.10.2,10.252.10.200"
   roles:
     - juju4.lxd
-

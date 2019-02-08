@@ -34,12 +34,16 @@
 - name: symlink lxd.lxd-bridge.service
   file: src=/lib/systemd/system/lxd.lxd-bridge.service dest=/lib/systemd/system/lxd-bridge.service state=link
 - name: Ensure directories exist
-  file: dest={{item}} state=directory mode=0755
+  file: dest={{ item }} state=directory mode=0755
   with_items:
     - /usr/lib/lxd
     - /var/log/lxd
 - name: add extra files from debian systemd
-  copy: src=/root/{{ item.s }} dest={{ item.d }} mode=0755 remote_src=yes
+  copy:
+    src: "/root/{{ item.s }}"
+    dest: "{{ item.d }}"
+    mode: '0755'
+    remote_src: yes
   with_items:
     - { s: 'debian/wrappers/lxd-bridge.start', d: '/usr/lib/lxd' }
     - { s: 'debian/wrappers/profile-config', d: '/usr/lib/lxd' }

@@ -19,11 +19,13 @@
     - name: apt | update cache
       apt: update_cache=yes
       when: backports1.changed or backports2.changed
+      register: pkg_result
+      until: pkg_result is success
     - name: apt | manual install of lxd
       command: "env DEBIAN_FRONTEND=noninteractive apt-get -t trusty-backports -y install lxd"
       args:
         creates: /usr/bin/lxd
-#      apt: name={{item}} update_cache=yes default_release='trusty-backports'
+#      apt: name={{ item }} update_cache=yes default_release='trusty-backports'
 ## The following packages have unmet dependencies: lxd ...
   when: ansible_distribution_release == 'trusty'
 
