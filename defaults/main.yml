@@ -3,7 +3,12 @@
 ## don't reboot system if needed
 lxd_noreboot: true
 
-lxd_with_zfs_backend: false
+lxd_cluster: true
+lxd_cluster_secret: LxdSecretChangeMe
+
+lxd_with_zfs_backend: true
+lxd_zfs_size: 64GB
+lxd_storage_name: local
 
 lxd_bridgeconf_use_bridge: "true"
 lxd_bridgeconf_bridge: "lxdbr0"

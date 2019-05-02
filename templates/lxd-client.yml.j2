@@ -1,0 +1,41 @@
+config: {}
+networks: []
+storage_pools: []
+profiles: []
+cluster:
+  server_name: {{ inventory_hostname }}
+  enabled: true
+  member_config:
+{% if not lxd_with_zfs_backend %}
+  - entity: storage-pool
+    name: {{ lxd_storage_name }}
+    key: source
+    value: ""
+    description: '"source" property for storage pool "default"'
+  - entity: storage-pool
+    name: local
+    key: source
+    value: ""
+    description: '"source" property for storage pool "local"'
+{% else %}
+  - entity: storage-pool
+    name: {{ lxd_storage_name }}
+    key: size
+    value: ""
+    description: '"size" property for storage pool "local"'
+  - entity: storage-pool
+    name: {{ lxd_storage_name }}
+    key: source
+    value: ""
+    description: '"source" property for storage pool "local"'
+  - entity: storage-pool
+    name: {{ lxd_storage_name }}
+    key: zfs.pool_name
+    value: ""
+    description: '"zfs.pool_name" property for storage pool "local"'
+{% endif %}
+  cluster_address: {{ hostvars[groups.lxd[0]].ansible_default_ipv4.address }}:8443
+  cluster_certificate: |
+    {{ "\n    ".join(lxc_info.environment.certificate[:-1].split('\n')) }}
+  server_address: {{ ansible_default_ipv4.address }}:8443
+  cluster_password: {{ lxd_cluster_secret }}

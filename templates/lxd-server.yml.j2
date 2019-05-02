@@ -1,0 +1,46 @@
+config:
+  core.trust_password: {{ lxd_cluster_secret }}
+  core.https_address: {{ ansible_default_ipv4.address }}:8443
+  images.auto_update_interval: 15
+storage_pools:
+{% if not lxd_with_zfs_backend %}
+- config:
+  name: {{ lxd_storage_name }} 
+  driver: dir
+{% else %}
+- config:
+    size: {{ lxd_zfs_size }}
+  description: ""
+  name: {{ lxd_storage_name }}
+  driver: zfs
+{% endif %}
+networks:
+- name: {{ lxd_bridgeconf_bridge }}
+  type: bridge
+  config:
+    ipv4.address: {{ lxd_bridgeconf_ipv4_network }}
+    ipv6.address: none
+profiles:
+- config: {}
+  name: default
+  description: ""
+  devices:
+    root:
+      path: /
+      pool: {{ lxd_storage_name }}
+      type: disk
+    eth0:
+      name: eth0
+      nictype: bridged
+      parent: {{ lxd_bridgeconf_bridge }}
+      type: nic
+cluster:
+  server_name: {{ inventory_hostname }}
+  enabled: true
+  member_config: []
+  cluster_address: ""
+  cluster_certificate: ""
+  server_address: ""
+  cluster_password: ""
+
+

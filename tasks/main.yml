@@ -7,6 +7,7 @@
 - name: Include version-specific variables for Ubuntu.
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
   when: ansible_distribution == 'Ubuntu'
+
 - name: Include version-specific variables for RedHat
   include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == "RedHat"
@@ -21,3 +22,6 @@
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
 
 - include: lxd.yml
+
+- include: lxd-cluster.yml
+  when: lxd_cluster is defined and lxd_cluster
