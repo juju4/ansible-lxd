@@ -14,7 +14,7 @@
     command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
-    when: inventory_hostname == groups.lxd[0]
+    when: inventory_hostname == groups.all[0]
 
   - name: lxc info
     shell: lxc info
@@ -37,7 +37,7 @@
     command: lxd init --preseed < 
     args:
       stdin: "{{ slaves }}"
-    when: inventory_hostname != groups.lxd[0]
+    when: inventory_hostname != groups.all[0]
 
   ## FIXME! there seems to be a bug with core.https_address
   - name: lxd set core.https_address
