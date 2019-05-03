@@ -10,7 +10,12 @@ lxd_with_zfs_backend: true
 lxd_zfs_size: 64GB
 lxd_storage_name: local
 
-lxd_bridgeconf_use_bridge: "true"
+lxd_fanconf_use_fan: "true"
+lxd_fanconf_fan: "lxdfan0"
+lxd_fanconf_underlay_subnet: "10.0.0.0/16"
+# lxd_fanconf_underlay_subnet: "auto"
+
+lxd_bridgeconf_use_bridge: "false"
 lxd_bridgeconf_bridge: "lxdbr0"
 lxd_bridgeconf_ipv4_addr: "10.252.116.1"
 lxd_bridgeconf_ipv4_netmask: "255.255.255.0"

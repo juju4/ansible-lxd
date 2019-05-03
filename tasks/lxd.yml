@@ -1,10 +1,12 @@
 ---
 
+## FIXME! are there any settings for fan networks ? maybe obsolete ?
 - name: configure lxd bridge
   template: src=lxd-bridge.j2 dest=/etc/default/lxd-bridge mode=0644 backup=yes
   notify:
     - restart lxd-bridge
   register: lxdconf
+  when: not lxd_cluster and lxd_bridgeconf_use_bridge
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network

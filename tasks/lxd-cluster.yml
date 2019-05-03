@@ -4,13 +4,16 @@
   - name: lxd-cluster
     command: echo
 
-  - name: test lxd-server.yml
-    template: src=lxd-server.yml.j2 dest=/tmp/lxd-server.yml
+  - set_fact:
+      master="{{ lookup('template', 'lxd-server.yml.j2') }}"
+
+  - debug:
+      var: master
 
   - name: lxd init lxd-server.yml
     command: lxd init --preseed <
     args:
-      stdin: "{{ lookup('template', 'lxd-server.yml.j2') }}"
+      stdin: "{{ master }}"
     when: inventory_hostname == groups.lxd[0]
 
   - name: lxc info
@@ -24,15 +27,14 @@
   - debug:
       var: lxc_info.environment.certificate_fingerprint
 
-  - name: test lxd-client.yml
-    template: src=lxd-client.yml.j2 dest=/tmp/lxd-client.yml
+  - set_fact:
+      slaves="{{ lookup('template', 'lxd-client.yml.j2') }}"
+
+  - debug:
+      var: slaves
 
   - name: lxd init lxd-client.yml
     command: lxd init --preseed < 
     args:
-      stdin: "{{ lookup('template', 'lxd-client.yml.j2') }}"
+      stdin: "{{ slaves }}"
     when: inventory_hostname != groups.lxd[0]
-
-  # - name: configure core_address
-  #   command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
-
