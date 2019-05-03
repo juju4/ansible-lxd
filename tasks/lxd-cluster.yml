@@ -38,3 +38,7 @@
     args:
       stdin: "{{ slaves }}"
     when: inventory_hostname != groups.lxd[0]
+
+  ## FIXME! there seems to be a bug with core.https_address
+  - name: lxd set core.https_address
+    command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
