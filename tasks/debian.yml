@@ -1,34 +1,5 @@
 ---
 
-- block:
-    - name: Ubuntu | Enable backports (replace)
-      replace:
-        dest: '/etc/apt/sources.list'
-        regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release }}-backports'
-        replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release }}-backports'
-        backup: yes
-      register: backports1
-    - name: Ubuntu | Enable backports (line)
-      lineinfile:
-        dest: '/etc/apt/sources.list'
-        regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse'
-        line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release }}-backports main restricted universe multiverse'
-        backup: yes
-      register: backports2
-
-    - name: apt | update cache
-      apt: update_cache=yes
-      when: backports1.changed or backports2.changed
-      register: pkg_result
-      until: pkg_result is success
-    - name: apt | manual install of lxd
-      command: "env DEBIAN_FRONTEND=noninteractive apt-get -t trusty-backports -y install lxd"
-      args:
-        creates: /usr/bin/lxd
-#      apt: name={{ item }} update_cache=yes default_release='trusty-backports'
-## The following packages have unmet dependencies: lxd ...
-  when: ansible_distribution_release == 'trusty'
-
 - name: apt | lxd
   apt: name={{ lxd_packages }} state=present
   register: pkg_result

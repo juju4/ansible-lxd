@@ -17,7 +17,7 @@ It was tested on the following versions:
 
 ### Operating systems
 
-Tested on Ubuntu 14.04, 16.04 and 18.04.
+Tested on Ubuntu 16.04, 18.04 and 19.04.
 Initial support for RHEL/Centos7 through ngompa/snapcore-el7 copr.
 
 ## Example Playbook
