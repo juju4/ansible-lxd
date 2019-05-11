@@ -1,14 +1,20 @@
 ---
 
 - name: configure lxd bridge
-  template: src=lxd-bridge.j2 dest=/etc/default/lxd-bridge mode=0644 backup=yes
+  template:
+    src: lxd-bridge.j2
+    dest: /etc/default/lxd-bridge
+    mode: 0644
+    backup: yes
   notify:
     - restart lxd-bridge
   register: lxdconf
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network
-  service: name=lxd state=restarted
+  service:
+    name: lxd
+    state: restarted
   when: >
     lxdconf.changed and
     (ansible_virtualization_type is not defined or
@@ -17,7 +23,8 @@
 ## centos7/vagrant/virtualbox
   ignore_errors: true
 
-- block:
+- name: Optional configure lxd dnsmasq
+  block:
     - name: create config dir
       file: dest=/etc/lxc state=directory mode=0755
     - name: configure static ip inside dnsmasq
@@ -40,12 +47,18 @@
   changed_when: false
   register: ps
   ignore_errors: true
-- debug: var=ps
+- debug:
+    var: ps
 
 ## FIXME! idempotency issue on xenial: lxd fault at first run / lxd in lxd impact?
-- debug: var=ansible_virtualization_type
+- debug:
+    var: ansible_virtualization_type
+
 - name: ensure lxd service is started and enabled
-  service: name=lxd state=started enabled=yes
+  service:
+    name: lxd
+    state: started
+    enabled: yes
   when: >
     (ansible_virtualization_type is not defined or
       not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
@@ -58,9 +71,11 @@
   changed_when: false
   register: ps
   ignore_errors: true
-- debug: var=ps
+- debug:
+    var: ps
 
-- block:
+- name: optional reboot
+  block:
     - name: Debian | Check if a reboot is required
       register: file
       stat: path=/var/run/reboot-required get_md5=no
@@ -89,7 +104,7 @@
 - name: increase fs.inotify.max_user_instances (default 128)
   sysctl:
     name: "fs.inotify.max_user_instances"
-    value: 1048576
+    value: "1048576"
     sysctl_set: yes
     state: present
     reload: yes

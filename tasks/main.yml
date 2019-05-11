@@ -1,6 +1,9 @@
 ---
 
-- debug: var=ansible_env
+- name: debug ansible_env
+  debug:
+    var: ansible_env
+
 - include: travis.yml
   when: ansible_env['TRAVIS'] is defined and ansible_env['TRAVIS'] == 'true'
 
