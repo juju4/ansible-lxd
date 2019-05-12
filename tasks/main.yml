@@ -31,7 +31,7 @@
 
 - name: Extract LXD version
   set_fact:
-    lxd_version: "{{ lxd_version_cmd.stdout_lines }}"
+    lxd_version: "{{ lxd_version_cmd.stdout_lines[0] }}"
 
 - include: lxd-init.yml
   when: lxd_version is version('3.0', operator='ge', strict=True)
