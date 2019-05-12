@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  vars:
+    - lxd_cluster: true
+## must be different than lxc host if relevant
+    - lxd_bridgeconf_ipv4_addr: "10.252.10.1"
+    - lxd_bridgeconf_ipv4_network: "10.252.10.1/24"
+    - lxd_bridgeconf_ipv4_dhcp_range: "10.252.10.2,10.252.10.200"
+  roles:
+    - juju4.lxd

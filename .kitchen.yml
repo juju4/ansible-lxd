@@ -29,3 +29,6 @@ suites:
   - name: default
     run_list:
     attributes:
+  - name: cluster
+    run_list:
+    attributes:

@@ -24,3 +24,5 @@
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
 
 - include: lxd.yml
+
+- include: lxd-init.yml
