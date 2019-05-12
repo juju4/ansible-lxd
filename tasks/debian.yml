@@ -21,12 +21,12 @@
       when: backports1.changed or backports2.changed
       register: pkg_result
       until: pkg_result is success
-    - name: apt | manual install of lxd
-      command: "env DEBIAN_FRONTEND=noninteractive apt-get -t {{ ansible_distribution_release|lower }}-backports -y install lxd"
-      args:
-        creates: /usr/bin/lxd
-#      apt: name={{ item }} update_cache=yes default_release='{{ ansible_distribution_release }}-backports'
-## The following packages have unmet dependencies: lxd ...
+    - name: apt | install of lxd
+      apt:
+        name: lxd
+        state: present
+        default_release: "{{ ansible_distribution_release|lower }}-backports"
+        update_cache: yes
   when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' #or ansible_distribution_release == 'xenial'
 
 - name: apt | lxd
