@@ -34,4 +34,4 @@
     lxd_version: "{{ lxd_version_cmd.stdout_lines }}"
 
 - include: lxd-init.yml
-  when: lxd_version >= "3.00"
+  when: lxd_version is version('3.0', operator='ge', strict=True)
