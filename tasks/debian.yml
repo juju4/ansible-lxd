@@ -27,7 +27,7 @@
         creates: /usr/bin/lxd
 #      apt: name={{ item }} update_cache=yes default_release='{{ ansible_distribution_release }}-backports'
 ## The following packages have unmet dependencies: lxd ...
-  when: ansible_distribution_release == 'trusty' #or ansible_distribution_release == 'xenial'
+  when: lxd_force_ubuntu_backports or ansible_distribution_release == 'trusty' #or ansible_distribution_release == 'xenial'
 
 - name: apt | lxd
   apt:
