@@ -17,7 +17,7 @@
     when: not lxd_cluster or inventory_hostname == groups.all[0]
 
   - name: lxc info
-    shell: lxc info
+    command: lxc info
     register: lxc_info_src
     run_once: true
 
