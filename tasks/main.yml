@@ -25,4 +25,13 @@
 
 - include: lxd.yml
 
+- name: Get LXD Version
+  shell: lxd --version
+  register: lxd_version_cmd
+
+- name: Extract LXD version
+  set_fact:
+    lxd_version: "{{ lxd_version_cmd.stdout_lines }}"
+
 - include: lxd-init.yml
+  when: lxd_version >= "3.00"
