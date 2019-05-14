@@ -34,7 +34,7 @@ cluster:
     value: ""
     description: '"zfs.pool_name" property for storage pool "local"'
 {% endif %}
-  cluster_address: {{ hostvars[groups.lxd[0]].ansible_default_ipv4.address }}:8443
+  cluster_address: {{ hostvars[groups.all[0]].ansible_default_ipv4.address }}:8443
   cluster_certificate: |
     {{ "\n    ".join(lxc_info.environment.certificate[:-1].split('\n')) }}
   server_address: {{ ansible_default_ipv4.address }}:8443
