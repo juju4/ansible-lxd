@@ -25,11 +25,18 @@ describe file('/var/lib/lxd/unix.socket') do
   it { should be_socket }
 end
 
-
 describe interface('lxdfan0') do
   it { should exist }
 end
 
 describe interface('lxdbr0') do
   it { should exist }
+end
+
+describe port(8443) do
+  it { should be_listening.with('tcp') }
+end
+
+describe port(8443) do
+  it { should be_listening.with('tcp6') }
 end
