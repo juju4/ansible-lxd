@@ -34,7 +34,7 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: apt | zfs denpendencies
+- name: apt | zfs dependencies
   apt: name=zfsutils-linux state=present
   when: lxd_with_zfs_backend is defined and lxd_with_zfs_backend
   register: pkg_result
