@@ -18,7 +18,7 @@ driver_config:
 provisioner:
   name: ansible_playbook
   roles_path: ../
-  hosts: test-kitchen
+  hosts: all
   ansible_verbose: false
   ansible_verbosity: 2
   ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
