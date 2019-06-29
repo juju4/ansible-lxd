@@ -46,4 +46,4 @@
     ## FIXME! there seems to be a bug with core.https_address
     - name: lxd set core.https_address
       command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
-  when: lxd_cluster
+  when: lxd_cluster|bool
