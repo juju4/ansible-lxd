@@ -1,6 +1,9 @@
 ---
 
-- debug: var=ansible_env
+- name: debug ansible_env
+  debug:
+    var: ansible_env
+
 - include: travis.yml
   when: ansible_env['TRAVIS'] is defined and ansible_env['TRAVIS'] == 'true'
 
@@ -21,3 +24,14 @@
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
 
 - include: lxd.yml
+
+- name: Get LXD Version
+  command: lxd --version
+  register: lxd_version_cmd
+
+- name: Extract LXD version
+  set_fact:
+    lxd_version: "{{ lxd_version_cmd.stdout_lines[0] }}"
+
+- include: lxd-init.yml
+  when: lxd_version is version('3.0', operator='ge', strict=True)

@@ -3,7 +3,16 @@
 ## don't reboot system if needed
 lxd_noreboot: true
 
+lxd_cluster: false
+lxd_cluster_secret: LxdSecretChangeMe
+
 lxd_with_zfs_backend: false
+lxd_zfs_size: 64GB
+lxd_storage_name: local
+
+lxd_fanconf_use_fan: "true"
+lxd_fanconf_fan: "lxdfan0"
+lxd_fanconf_underlay_subnet: "auto"
 
 lxd_bridgeconf_use_bridge: "true"
 lxd_bridgeconf_bridge: "lxdbr0"
@@ -17,6 +26,8 @@ lxd_bridgeconf_ipv6_proxy: false
 
 lxd_dnsmasq_conf: false
 lxd_dnsmasq_staticips: []
+
+lxd_force_ubuntu_backports: false
 
 ## https://github.com/lxc/lxd/issues/1229, increase required if using nesting
 lxd_subid_start: 100000
