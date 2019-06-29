@@ -98,7 +98,7 @@
   when: >
     (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and
     (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc")) and
-    (travisci is not defined or travisci == false)
+    (travisci is not defined or not travisci)
 
 ## REVIEW needed: https://github.com/lxc/lxd/blob/master/doc/production-setup.md
 - name: increase fs.inotify.max_user_instances (default 128)
