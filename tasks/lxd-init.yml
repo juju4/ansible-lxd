@@ -46,6 +46,7 @@
       when: inventory_hostname != groups.all[0]
 
     ## FIXME! there seems to be a bug with core.https_address
+    ## FIXME! idempotence
     - name: lxd set core.https_address
       command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
   when: lxd_cluster|bool
