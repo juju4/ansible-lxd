@@ -28,6 +28,7 @@
 - name: Get LXD Version
   command: lxd --version
   register: lxd_version_cmd
+  changed_when: false
 
 - name: Extract LXD version
   set_fact:

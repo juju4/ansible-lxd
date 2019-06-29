@@ -14,12 +14,14 @@
     command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
+      creates: /var/lib/lxd/server.key
     when: not lxd_cluster or inventory_hostname == groups.all[0]
 
   - name: lxc info
     command: lxc info
     register: lxc_info_src
     run_once: true
+    changed_when: false
 
   - name: store stdout from lxc info
     set_fact:
