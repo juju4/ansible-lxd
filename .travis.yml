@@ -15,23 +15,32 @@ env:
     version: 18.04
     ansible_version: 2.7.6
     cryptography_version: 2.5.0
+    suite: default
   - distribution: ubuntu
     version: 16.04
     ansible_version: 2.7.6
     cryptography_version: 2.5.0
+    suite: default
   - distribution: ubuntu
     version: 14.04
     ansible_version: 2.6.13
     cryptography_version: 2.0.3
+    suite: default
 #  - distribution: ubuntu
 #    version: 12.04
 #  - distribution: alpine
 #    version: 3.4
+  - distribution: ubuntu
+    version: 18.04
+    ansible_version: 2.7.6
+    cryptography_version: 2.5.0
+    suite: default-cluster
 ## past ansible versions
   - distribution: ubuntu
     version: 16.04
     ansible_version: 2.6.13
     cryptography_version: 2.5.0
+    suite: default
 
 before_install:
   - env
