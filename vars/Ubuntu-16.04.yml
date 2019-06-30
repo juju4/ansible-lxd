@@ -2,6 +2,8 @@
 
 lxd_packages:
     - lxd
+    - acl
+    - dnsmasq-base
     - python-pip
     - python-lxc
     - sqlite3
