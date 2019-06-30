@@ -10,7 +10,7 @@
   until: pkg_result is success
 
 - name: RedHat7 | Enable ngompa/snapcore-el7 copr
-  command: "dnf copr enable -y ngompa/snapcore-el7"
+  command: "yum copr enable -y ngompa/snapcore-el7"
   args:
     creates: /etc/yum.repos.d/_copr_@gift-stable.repo
     warn: False
