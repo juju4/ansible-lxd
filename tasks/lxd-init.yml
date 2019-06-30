@@ -5,7 +5,7 @@
 
   - name: create lxd-server.yml
     set_fact:
-      master="{{ lookup('template', 'lxd-server.yml.j2') }}"
+      master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
 
   # - debug:
   #     var: master
