@@ -14,7 +14,7 @@
     command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
-      creates: /var/lib/lxd/server.key
+      creates: /var/lib/lxd/networks/lxdfan0
     when: not lxd_cluster or inventory_hostname == groups.all[0]
 
   - name: lxc info
