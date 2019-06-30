@@ -24,7 +24,7 @@
     - name: apt | install of lxd from backports
       apt:
         name: lxd
-        state: present
+        state: latest
         default_release: "{{ ansible_distribution_release|lower }}-backports"
         update_cache: yes
   when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' or ansible_distribution_release.lower() == 'xenial'
