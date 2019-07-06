@@ -1,6 +1,6 @@
 config:
   core.trust_password: {{ lxd_cluster_secret }}
-  core.https_address: {{ ansible_default_ipv4.address }}:8443
+  core.https_address: {{ ansible_default_ipv4.address | default('127.0.0.1') }}:8443
   images.auto_update_interval: 15
 storage_pools:
 {% if not lxd_with_zfs_backend %}
