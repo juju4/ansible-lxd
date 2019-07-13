@@ -7,8 +7,9 @@
     set_fact:
       master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
 
-  # - debug:
-  #     var: master
+  - debug:
+      var: master
+      verbosity: 1
 
   - name: lxd init lxd-server.yml
     command: lxd init --preseed <
