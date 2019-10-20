@@ -2,6 +2,15 @@
 
 - name: LXD init
   block:
+  - name: lxc info
+    command: lxc info
+    register: lxc_info_src0
+    run_once: true
+    changed_when: false
+
+  - debug:
+      var: lxc_info_src0
+      verbosity: 1
 
   - name: create lxd-server.yml
     set_fact:
@@ -11,12 +20,23 @@
       var: master
       verbosity: 1
 
+  - debug: var=lxd_cluster
+  - debug: var=inventory_hostname
+  - debug: var=groups.all[0]
+  - debug: var=lxc_info_src0.stdout
+  - copy:
+      dest: /tmp/lxd-server.yml
+      content: "{{ master }}"
+
   - name: lxd init lxd-server.yml
     command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
-      creates: /var/lib/lxd/networks/lxdfan0
-    when: not lxd_cluster or inventory_hostname == groups.all[0]
+#      creates: /var/lib/lxd/networks/lxdfan0
+      creates: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
+    when: >
+      (not lxd_cluster or inventory_hostname == groups.all[0])
+      and ("'storage: \"\",' in lxc_info_src0.stdout")
 
   - name: lxc info
     command: lxc info
@@ -26,7 +46,17 @@
 
   - name: store stdout from lxc info
     set_fact:
-      lxc_info="{{ lxc_info_src.stdout | from_yaml }}"
+      lxc_info: "{{ lxc_info_src.stdout | from_yaml }}"
+
+- name: check network
+  command: lxc network list
+  register: lxc_network_list
+  ignore_errors: true
+  changed_when: false
+
+- debug:
+    var: lxc_network_list
+    verbosity: 1
 
 - name: LXD cluster clients
   block:

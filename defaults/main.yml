@@ -6,9 +6,9 @@ lxd_noreboot: true
 lxd_cluster: false
 lxd_cluster_secret: LxdSecretChangeMe
 
-lxd_with_zfs_backend: false
-lxd_zfs_size: 64GB
-lxd_storage_name: local
+lxd_with_zfs_backend: true
+lxd_zfs_size: 16GB
+lxd_storage_name: myzfspool
 
 lxd_fanconf_use_fan: "true"
 lxd_fanconf_fan: "lxdfan0"
@@ -19,9 +19,12 @@ lxd_bridgeconf_bridge: "lxdbr0"
 lxd_bridgeconf_ipv4_addr: "10.252.116.1"
 lxd_bridgeconf_ipv4_netmask: "255.255.255.0"
 lxd_bridgeconf_ipv4_network: "10.252.116.1/24"
-lxd_bridgeconf_ipv4_dhcp_range: "10.252.116.2,10.252.116.200"
+lxd_bridgeconf_ipv4_dhcp_range: "10.252.116.2-10.252.116.200"
 lxd_bridgeconf_ipv4_dhcp_max: 199
 lxd_bridgeconf_ipv4_nat: true
+lxd_bridgeconf_ipv6_addr: "auto"
+lxd_bridgeconf_ipv6_dhcp: "true"
+lxd_bridgeconf_ipv6_dhcp_range: ""
 lxd_bridgeconf_ipv6_proxy: false
 
 lxd_dnsmasq_conf: false

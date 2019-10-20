@@ -20,7 +20,19 @@ networks:
   type: bridge
   config:
     ipv4.address: {{ lxd_bridgeconf_ipv4_network }}
-    ipv6.address: none
+{% if lxd_bridgeconf_ipv4_dhcp_range %}
+    ipv4.dhcp: "true"
+    ipv4.dhcp.gateway: "{{ lxd_bridgeconf_ipv4_addr }}"
+    ipv4.dhcp.ranges: "{{ lxd_bridgeconf_ipv4_dhcp_range }}"
+{% endif %}
+    ipv4.nat: "{{ lxd_bridgeconf_ipv4_nat }}"
+    ipv6.address: "{{ lxd_bridgeconf_ipv6_addr }}"
+{% if lxd_bridgeconf_ipv6_dhcp %}
+    ipv6.dhcp: "true"
+{% if lxd_bridgeconf_ipv6_dhcp_range %}
+    ipv6.dhcp.ranges: "{{ lxd_bridgeconf_ipv6_dhcp_range }}"
+{% endif %}
+{% endif %}
 {% endif %}
 {% if lxd_fanconf_use_fan %}
 - name: {{ lxd_fanconf_fan }}
