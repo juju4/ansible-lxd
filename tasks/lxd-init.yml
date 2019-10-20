@@ -32,8 +32,10 @@
     command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
-#      creates: /var/lib/lxd/networks/lxdfan0
-      creates: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
+# if storage dir and else
+      creates: /var/lib/lxd/networks/lxdfan0
+# if storage zfs only
+#      creates: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
     when: >
       (not lxd_cluster or inventory_hostname == groups.all[0])
       and ('"storage{{ ":" }} \"\"," in lxc_info_src0.stdout')
