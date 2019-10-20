@@ -6,7 +6,7 @@ lxd_noreboot: true
 lxd_cluster: false
 lxd_cluster_secret: LxdSecretChangeMe
 
-lxd_with_zfs_backend: true
+lxd_with_zfs_backend: false
 lxd_zfs_size: 16GB
 lxd_storage_name: myzfspool
 
