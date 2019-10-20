@@ -37,7 +37,6 @@
     when: >
       (not lxd_cluster or inventory_hostname == groups.all[0])
       and ("'storage: \"\",' in lxc_info_src0.stdout")
-      and not ("'storage: dir' in lxc_info_src0.stdout")
 
   - name: lxc info
     command: lxc info
