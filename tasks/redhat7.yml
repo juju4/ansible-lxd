@@ -50,13 +50,6 @@
     - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"
   register: kernelconf
 
-- name: RedHat7 | Configure user.max_user_namespaces
-  sysctl:
-    name: user.max_user_namespaces
-    value: 3883
-    sysctl_file: /etc/sysctl.d/99-userns.conf
-    reload: yes
-
 - name: RedHat7 | reboot
   command: /sbin/reboot
   async: 0
