@@ -107,6 +107,7 @@
     value: "1048576"
     sysctl_set: yes
     state: present
+    sysctl_file: /etc/sysctl.d/10-lxd-inotify.conf
     reload: yes
   when: >
     (ansible_virtualization_type is not defined or
