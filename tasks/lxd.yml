@@ -116,7 +116,7 @@
 - name: Configure user.max_user_namespaces
   sysctl:
     name: user.max_user_namespaces
-    value: 3883
+    value: '3883'
     sysctl_file: /etc/sysctl.d/99-userns.conf
     reload: yes
   when: >
