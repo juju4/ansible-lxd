@@ -3,6 +3,10 @@
 /var/lib/lxd$ VarDir
 /var/lib/lxd-bridge$ VarDir
 /var/lib/lxd-bridge/dnsmasq.lxdbr0.leases$ VarFile
+/var/lib/lxd/database/global/snapshots$ VarDir
+/var/lib/lxd/images$ VarDir
+/var/lib/lxd/storage-pools$ VarDir
+!/var/lib/lxd/storage-pools
 !/var/lib/lxcfs/cgroup
 !/var/lib/lxcfs/proc
 !/var/lib/lxd/shmounts
