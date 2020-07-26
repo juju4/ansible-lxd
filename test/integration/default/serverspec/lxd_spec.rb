@@ -4,9 +4,9 @@ require 'serverspec'
 set :backend, :exec
 
 if (os[:family] == 'ubuntu' && os[:release] == '20.04')
-  set snap_lxd = 1
+  set snap_lxd = TRUE
 else
-  set snap_lxd = 0
+  set snap_lxd = FALSE
 end
 
 describe package('lxd') do
@@ -18,12 +18,12 @@ describe file('/usr/bin/lxd') do
   it { should be_executable }
 end
 
-describe service('lxd'), :if => os[:family] == 'ubuntu' and not snap_lxd do
+describe service('lxd'), :if => os[:family] == 'ubuntu' && not snap_lxd do
   it { should be_enabled }
   it { should be_running }
 end
 
-describe file('/var/lib/lxd/unix.socket'), :if => os[:family] == 'ubuntu' and not snap_lxd do
+describe file('/var/lib/lxd/unix.socket'), :if => os[:family] == 'ubuntu' && not snap_lxd do
   it { should be_socket }
 end
 
