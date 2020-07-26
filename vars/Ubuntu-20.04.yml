@@ -2,6 +2,5 @@
 
 lxd_packages:
     - lxd
-    - python-pip
-    - python-lxc
+    - python3-pip
     - sqlite3
