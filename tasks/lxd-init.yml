@@ -24,7 +24,8 @@
   - debug: var=inventory_hostname
   - debug: var=groups.all[0]
   - debug: var=lxc_info_src0.stdout
-  - copy:
+  - name: Set temporary lxd-server configuration file
+    copy:
       dest: /tmp/lxd-server.yml
       content: "{{ master }}"
 
