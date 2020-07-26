@@ -4,9 +4,9 @@ require 'serverspec'
 set :backend, :exec
 
 if (os[:family] == 'ubuntu' && os[:release] == '20.04')
-  set snap_lxd = true
+  set snap_lxd = True
 else
-  set snap_lxd = false
+  set snap_lxd = False
 end
 
 describe package('lxd') do
