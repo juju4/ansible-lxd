@@ -36,7 +36,8 @@
       creates: "{{ lxd_init_file_test }}"
     when: >
       (not lxd_cluster or inventory_hostname == groups.all[0])
-      and ('"storage{{ ":" }} \"\"," in lxc_info_src0.stdout')
+      and
+      lxc_info_src0.stdout.find('storage: \"\"') != -1
 
   - name: lxc info
     command: lxc info
