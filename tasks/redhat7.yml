@@ -50,12 +50,18 @@
   register: pkg_result
   until: pkg_result is success
 
+- name: Check grub file
+  stat:
+    path: /boot/grub2/grubenv
+    register: grub2
+
 - name: RedHat | Configure Kernel
   command: "{{ item }}"
   with_items:
     - grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
     - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"
   register: kernelconf
+  when: grub2.stat.exists
 
 - name: RedHat | reboot
   command: /sbin/reboot
