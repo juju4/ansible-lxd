@@ -77,6 +77,9 @@ but RHEL/CentOS 7 has kernel 3.10 which is ?not compatible with LXC.
 $ /bin/systemctl start lxd
 ```
 
+* Rhel/Centos8 disable as snap in lxd kitchen requires extra config
+https://forum.proxmox.com/threads/ubuntu-snaps-inside-lxc-container-on-proxmox.36463/#post-230060
+
 ## License
 
 BSD 2-clause
