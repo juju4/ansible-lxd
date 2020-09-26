@@ -1,0 +1,8 @@
+---
+
+lxd_packages:
+    - yum-plugin-copr
+    - epel-release
+    - http://download.zfsonlinux.org/epel/zfs-release.el8_2.noarch.rpm
+    - dnf
+    - copr-cli

@@ -5,6 +5,9 @@ rvm:
   - 2.6
 
 env:
+  - distribution: centos
+    version: 8
+    suite: default
 #  - distribution: centos
 #    version: 7
 #    suite: default
