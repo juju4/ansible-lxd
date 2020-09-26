@@ -3,6 +3,6 @@
 lxd_packages:
     - yum-plugin-copr
     - epel-release
-    - http://download.zfsonlinux.org/epel/zfs-release.el7_4.noarch.rpm
+    - http://download.zfsonlinux.org/epel/zfs-release.el7_8.noarch.rpm
     - dnf
     - copr-cli
