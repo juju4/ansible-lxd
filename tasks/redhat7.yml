@@ -22,12 +22,6 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: RedHat | Enable ngompa/snapcore-el7 copr
-  command: "copr enable -y ngompa/snapcore-el7"
-  args:
-    creates: /etc/yum.repos.d/_copr_@gift-stable.repo
-    warn: False
-
 - name: RedHat | Ensure snapd is present
   yum:
     name: snapd
