@@ -7,7 +7,7 @@
     state: present
     key: https://keys.openpgp.org/vks/v1/by-fingerprint/C93AFFFD9F3F7B03C310CEB6A9D5A1C0F14AB620
 
-- name: RedHat7 | lxd dependencies install
+- name: RedHat | lxd dependencies install
   yum:
     name: "{{ lxd_packages }}"
     state: present
@@ -15,13 +15,13 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: RedHat7 | Enable ngompa/snapcore-el7 copr
+- name: RedHat | Enable ngompa/snapcore-el7 copr
   command: "copr enable -y ngompa/snapcore-el7"
   args:
     creates: /etc/yum.repos.d/_copr_@gift-stable.repo
     warn: False
 
-- name: RedHat7 | Ensure snapd is present
+- name: RedHat | Ensure snapd is present
   yum:
     name: snapd
     state: present
@@ -29,19 +29,19 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: RedHat7 | Ensure snapd.socket is enabled and started
+- name: RedHat | Ensure snapd.socket is enabled and started
   service:
     name: snapd.socket
     enabled: yes
     state: started
 
-- name: RedHat7 | Configure ZFS repository
+- name: RedHat | Configure ZFS repository
   command: "{{ item }}"
   with_items:
     - yum-config-manager --disable zfs
     - yum-config-manager --enable zfs-kmod
 
-- name: RedHat7 | Ensure ZFS is present
+- name: RedHat | Ensure ZFS is present
   yum:
     name: zfs
     state: present
@@ -49,21 +49,21 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: RedHat7 | Configure Kernel
+- name: RedHat | Configure Kernel
   command: "{{ item }}"
   with_items:
     - grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
     - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"
   register: kernelconf
 
-- name: RedHat7 | reboot
+- name: RedHat | reboot
   command: /sbin/reboot
   async: 0
   poll: 0
   ignore_errors: true
   when: kernelconf is changed
 
-- name: RedHat7 | Wait for system to be back online
+- name: RedHat | Wait for system to be back online
   wait_for_connection:
     connect_timeout: 20
     sleep: 5
@@ -74,7 +74,7 @@
 # https://github.com/ansible/ansible/issues/39155
 # https://github.com/wekan/wekan-snap/wiki/Install-snap-with-Ansible
 
-- name: RedHat7 | install lxd with snap
+- name: RedHat | install lxd with snap
   snap:
     name: lxd
     state: present
