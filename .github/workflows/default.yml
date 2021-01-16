@@ -79,18 +79,20 @@ jobs:
         continue-on-error: true
       - name: After script - files
         run: |
-          ls -la /var/lib/lxd/disks/
-          ls -la /var/lib/lxd/networks/
+          sudo ls -la /var/lib/lxd/disks/
+          sudo ls -la /var/lib/lxd/networks/
         continue-on-error: true
       - name: After script - lxc
         run: |
-          lxc info
-          lxc profile show default
-          lxc storage list
-          lxc network list
+          sudo lxc info
+          sudo lxc profile show default
+          sudo lxc storage list
+          sudo lxc network list
         continue-on-error: true
       - name: After script - snap
         run: |
-          snap list
-          cat /var/snap/lxd/common/lxd/logs/lxd.log
+          if [ -x /usr/bin/snap ]; then
+            snap list
+            cat /var/snap/lxd/common/lxd/logs/lxd.log
+          fi
         continue-on-error: true
