@@ -11,7 +11,7 @@
   register: lxdconf
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
-- name: force restart of lxd to have working network
+- name: force restart of lxd to have working network  # noqa 503
   service:
     name: lxd
     state: restarted
@@ -37,6 +37,7 @@
     dest: "{{ item }}"
     regexp: '^(.*):([0-9]*):([0-9]*)$'
     replace: "\\1:{{ lxd_subid_start }}:{{ lxd_subid_range }}"
+    mode: '0644'
     backup: yes
   with_items:
     - /etc/subuid

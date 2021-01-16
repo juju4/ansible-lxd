@@ -11,8 +11,9 @@
   unarchive:
     src: /root/lxc-2.0.4.tar.gz
     dest: /root/
+    mode: '0755'
     creates: /root/lxc-2.0.4/README
-## Cannot change ownership to uid 201105, gid 200512
+  ## Cannot change ownership to uid 201105, gid 200512
   ignore_errors: true
 
 - name: build lxc

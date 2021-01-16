@@ -19,10 +19,18 @@
     dest: /root/
     mode: 0600
 - name: uncompress lxd debian package archive
-  unarchive: src=/root/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz dest=/root/
+  unarchive:
+    src: /root/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
+    dest: /root/
+    mode: '0755'
 
 - name: review systemd file for RHEL/CentOS 7
-  replace: dest=/root/debian/lxd.service regexp='^TasksMax=(.*)' replace='#TasksMax=\1' backup=yes
+  replace:
+    dest: /root/debian/lxd.service
+    regexp: '^TasksMax=(.*)'
+    replace: '#TasksMax=\1'
+    mode: '0644'
+    backup: yes
 - name: add systemd configuration
   copy: src=/root/{{ item }} dest=/lib/systemd/system/ mode=0755 remote_src=yes
   with_items:
@@ -32,7 +40,11 @@
     - 'debian/lxd.lxd-containers.service'
     - 'lxcfs-2.0.3/config/init/systemd/lxcfs.service'
 - name: symlink lxd.lxd-bridge.service
-  file: src=/lib/systemd/system/lxd.lxd-bridge.service dest=/lib/systemd/system/lxd-bridge.service state=link
+  file:
+    src: /lib/systemd/system/lxd.lxd-bridge.service
+    dest: /lib/systemd/system/lxd-bridge.service
+    state: link
+    mode: '0644'
 - name: Ensure directories exist
   file: dest={{ item }} state=directory mode=0755
   with_items:
@@ -41,7 +53,7 @@
 - name: add extra files from debian systemd
   copy:
     src: "/root/{{ item.s }}"
-    dest: "{{ item.d }}"
+    dest: "{{ item.d }}"
     mode: '0755'
     remote_src: yes
   with_items:

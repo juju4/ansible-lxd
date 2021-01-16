@@ -28,6 +28,7 @@
     copy:
       dest: /tmp/lxd-server.yml
       content: "{{ master }}"
+      mode: '0644'
 
   - name: lxd init lxd-server.yml
     command: lxd init --preseed <

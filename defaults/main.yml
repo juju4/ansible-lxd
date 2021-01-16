@@ -13,7 +13,7 @@ lxd_storage_name: myzfspool
 # if storage dir and else
 lxd_init_file_test: /var/lib/lxd/networks/lxdfan0
 # if storage zfs only
-#lxd_init_file_test: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
+# lxd_init_file_test: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
 
 lxd_fanconf_use_fan: "true"
 lxd_fanconf_fan: "lxdfan0"
@@ -40,4 +40,4 @@ lxd_force_ubuntu_backports: false
 ## https://github.com/lxc/lxd/issues/1229, increase required if using nesting
 lxd_subid_start: 100000
 lxd_subid_range: 65536
-#lxd_subid_range: 1065536
+# lxd_subid_range: 1065536

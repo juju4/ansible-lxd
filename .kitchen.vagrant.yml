@@ -7,13 +7,13 @@ transport:
   name: sftp
 
 ## make file transfer faster. need https://github.com/coderanger/kitchen-sync
-#transport:
-#  name: sftp
+# transport:
+#   name: sftp
 
 driver_config:
-    customize:
-#      cpus: 2
-      memory: 1024
+  customize:
+    # cpus: 2
+    memory: 1024
 
 provisioner:
   name: ansible_playbook
@@ -22,7 +22,7 @@ provisioner:
   ansible_verbose: false
   ansible_verbosity: 2
   ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
-#  name: chef_solo
+  # name: chef_solo
 
 platforms:
   - name: ubuntu-20.04

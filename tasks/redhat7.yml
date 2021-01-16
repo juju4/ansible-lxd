@@ -37,7 +37,7 @@
     state: started
 
 - name: RedHat | Configure ZFS repository
-  command: "{{ item }}"
+  command: "{{ item }}"  # noqa 301
   with_items:
     - yum-config-manager --disable zfs
     - yum-config-manager --enable zfs-kmod

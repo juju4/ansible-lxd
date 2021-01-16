@@ -36,27 +36,28 @@
 
 ## Note: those commands may work only after notify/services reload, so we flush
 - meta: flush_handlers
-#- name: force ldconfig reload for consecutive tasks
-#  command: "ldconfig"
-#  when: ldso.changed
+# - name: force ldconfig reload for consecutive tasks
+#   command: "ldconfig"
+#   when: ldso.changed
 
 - name: define uid/gid for containers
   lineinfile:
-    dest: "{{ item }}"
+    dest: "{{ item }}"
     line: '^root:1000000:65536'
+    mode: '0644'
     backup: yes
     create: yes
   with_items:
     - /etc/subuid
     - /etc/subgid
 
-#~/go/bin/lxd daemon
-#~/go/bin/lxd-benchmark spawn --count=5
-#Failed to spawn container 'benchmark-2': Failed to change ownership of: /var/lib/lxd/containers/benchmark-2/rootfs
+# ~/go/bin/lxd daemon
+# ~/go/bin/lxd-benchmark spawn --count=5
+# Failed to spawn container 'benchmark-2': Failed to change ownership of: /var/lib/lxd/containers/benchmark-2/rootfs
 
-#[root@c7 ~]# ~/go/bin/lxc launch images:alpine/3.4/amd64
-#Creating expert-terrapin
-#Retrieving image: 100%
-#error: Failed to change ownership of: /var/lib/lxd/containers/expert-terrapin/rootfs
-#[root@c7 ~]# ls -l /var/lib/lxd/containers/
-#total 0
+# [root@c7 ~]# ~/go/bin/lxc launch images:alpine/3.4/amd64
+# Creating expert-terrapin
+# Retrieving image: 100%
+# error: Failed to change ownership of: /var/lib/lxd/containers/expert-terrapin/rootfs
+# [root@c7 ~]# ls -l /var/lib/lxd/containers/
+# total 0

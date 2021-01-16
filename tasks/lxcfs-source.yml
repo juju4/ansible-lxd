@@ -8,8 +8,11 @@
     mode: '0600'
 
 - name: uncompress lxcfs archive
-  unarchive: src=/root/lxcfs-2.0.3.tar.gz dest=/root/
-## Cannot change ownership to uid 201105, gid 200512
+  unarchive:
+    src: /root/lxcfs-2.0.3.tar.gz
+    dest: /root/
+    mode: '0755'
+  ## Cannot change ownership to uid 201105, gid 200512
   ignore_errors: true
 
 - name: build lxcfs
