@@ -1,6 +1,3 @@
-[![Build Status - Master](https://travis-ci.org/juju4/ansible-lxd.svg?branch=master)](https://travis-ci.org/juju4/ansible-lxd)
-[![Build Status - Devel](https://travis-ci.org/juju4/ansible-lxd.svg?branch=devel)](https://travis-ci.org/juju4/ansible-lxd/branches)
-
 [![Actions Status - Master](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Amaster)
 [![Actions Status - Devel](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Adevel)
 
