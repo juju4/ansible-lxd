@@ -6,7 +6,7 @@ cluster:
   server_name: {{ inventory_hostname }}
   enabled: true
   member_config:
-{% if not lxd_with_zfs_backend %}
+{% if not lxd_with_zfs_backend or (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")) %}
   - entity: storage-pool
     name: {{ lxd_storage_name }}
     key: source
