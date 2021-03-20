@@ -35,7 +35,8 @@
   register: ldso
 
 ## Note: those commands may work only after notify/services reload, so we flush
-- meta: flush_handlers
+- name: Flush handlers
+  meta: flush_handlers
 # - name: force ldconfig reload for consecutive tasks
 #   command: "ldconfig"
 #   when: ldso.changed

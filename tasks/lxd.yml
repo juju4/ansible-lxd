@@ -48,11 +48,13 @@
   changed_when: false
   register: ps
   ignore_errors: true
-- debug:
+- name: Debug | process output
+  debug:
     var: ps
 
 ## FIXME! idempotency issue on xenial: lxd fault at first run / lxd in lxd impact?
-- debug:
+- name: Debug | ansible_virtualization_type
+  debug:
     var: ansible_virtualization_type
 
 - name: ensure lxd service is started and enabled
@@ -72,7 +74,8 @@
   changed_when: false
   register: ps
   ignore_errors: true
-- debug:
+- name: Debug | process output
+  debug:
     var: ps
 
 - name: optional reboot

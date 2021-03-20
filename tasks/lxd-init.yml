@@ -8,7 +8,8 @@
     run_once: true
     changed_when: false
 
-  - debug:
+  - name: Debug | lxc info
+    debug:
       var: lxc_info_src0
       verbosity: 1
 
@@ -16,14 +17,19 @@
     set_fact:
       master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
 
-  - debug:
+  - name: Debug | lxd-server config
+    debug:
       var: master
       verbosity: 1
 
-  - debug: var=lxd_cluster
-  - debug: var=inventory_hostname
-  - debug: var=groups.all[0]
-  - debug: var=lxc_info_src0.stdout
+  - name: Debug | lxd_cluster
+    debug: var=lxd_cluster
+  - name: Debug | inventory_hostname
+    debug: var=inventory_hostname
+  - name: Debug | groups.all[0]
+    debug: var=groups.all[0]
+  - name: Debug | lxc_info_src0
+    debug: var=lxc_info_src0.stdout
   - name: Set temporary lxd-server configuration file
     copy:
       dest: /tmp/lxd-server.yml
@@ -56,13 +62,15 @@
   ignore_errors: true
   changed_when: false
 
-- debug:
+- name: Debug | lxc network list
+  debug:
     var: lxc_network_list
     verbosity: 1
 
 - name: LXD cluster clients
   block:
-    - debug:
+    - name: Debug | lxc certificate fingerprint
+      debug:
         var: lxc_info.environment.certificate_fingerprint
 
     - name: create lxc-client.yml

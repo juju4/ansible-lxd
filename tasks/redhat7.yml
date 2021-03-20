@@ -61,14 +61,12 @@
     - grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
     - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"
   register: kernelconf
+  notify:
+    - RedHat | reboot
   when: grub2.stat.exists
 
-- name: RedHat | reboot
-  command: /sbin/reboot
-  async: 0
-  poll: 0
-  ignore_errors: true
-  when: kernelconf is changed
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: RedHat | Wait for system to be back online
   wait_for_connection:
@@ -76,7 +74,6 @@
     sleep: 5
     delay: 5
     timeout: 300
-  when: kernelconf is changed
 
 # https://github.com/ansible/ansible/issues/39155
 # https://github.com/wekan/wekan-snap/wiki/Install-snap-with-Ansible
