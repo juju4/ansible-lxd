@@ -78,15 +78,18 @@ jobs:
           systemctl -l --no-pager status lxd || true
           systemd-analyze security || true
           rsyslogd -v
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - sysctl
         run: |
           sysctl user
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - files
         run: |
           sudo ls -la /var/lib/lxd/disks/
           sudo ls -la /var/lib/lxd/networks/
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - lxc
         run: |
@@ -94,6 +97,7 @@ jobs:
           sudo lxc profile show default
           sudo lxc storage list
           sudo lxc network list
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - snap
         run: |
@@ -101,4 +105,5 @@ jobs:
             snap list
             cat /var/snap/lxd/common/lxd/logs/lxd.log
           fi
+        if: ${{ always() }}
         continue-on-error: true
