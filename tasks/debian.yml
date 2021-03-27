@@ -19,7 +19,9 @@
       register: backports2
 
     - name: apt | update cache
-      apt: update_cache=yes
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
       when: backports1.changed or backports2.changed
       register: pkg_result
       until: pkg_result is success
@@ -30,6 +32,11 @@
         default_release: "{{ ansible_distribution_release|lower }}-backports"
         update_cache: yes
   when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' or ansible_distribution_release.lower() == 'xenial'
+
+- name: Debian | refresh apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
 
 - name: apt | lxd
   apt:
