@@ -76,7 +76,7 @@ jobs:
       - name: After script - systemd
         run: |
           systemctl -l --no-pager status lxd || true
-          systemd-analyze security || true
+          systemd-analyze --no-pager security || true
           rsyslogd -v
         if: ${{ always() }}
         continue-on-error: true
