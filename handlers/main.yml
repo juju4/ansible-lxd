@@ -6,7 +6,7 @@
   service: name=lxd state=restarted
   when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
   ## centos7/vagrant/virtualbox
-  ignore_errors: true
+  failed_when: false
 
 - name: restart lxd-bridge
   service: name=lxd-bridge state=restarted
@@ -14,7 +14,7 @@
     ansible_distribution_release == 'xenial' and
     (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
   ## centos7/vagrant/virtualbox
-  ignore_errors: true
+  failed_when: false
 
 - name: ldconfig reload
   command: ldconfig
@@ -23,4 +23,4 @@
   command: /sbin/reboot
   async: 0
   poll: 0
-  ignore_errors: true
+  failed_when: false

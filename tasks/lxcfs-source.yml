@@ -13,7 +13,7 @@
     dest: /root/
     mode: '0755'
   ## Cannot change ownership to uid 201105, gid 200512
-  ignore_errors: true
+  failed_when: false
 
 - name: build lxcfs
   command: "{{ item }}"

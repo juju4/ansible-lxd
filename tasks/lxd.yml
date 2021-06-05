@@ -21,7 +21,7 @@
       not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
     )
 ## centos7/vagrant/virtualbox
-  ignore_errors: true
+  failed_when: false
 
 - name: Optional configure lxd dnsmasq
   block:
@@ -67,7 +67,7 @@
       not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
     )
 ## centos7/vagrant/virtualbox
-  ignore_errors: true
+  failed_when: false
 
 - name: check if lxd is running
   shell: "ps axu |grep [l]xd"
@@ -91,7 +91,7 @@
       when: file.stat.exists is defined and file.stat.exists and not (lxd_noreboot is defined and lxd_noreboot)
       async: 0
       poll: 0
-      ignore_errors: true
+      failed_when: false
     - name: waiting for server to come back
       wait_for:
         host: "{{ inventory_hostname }}"

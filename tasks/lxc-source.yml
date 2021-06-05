@@ -14,7 +14,7 @@
     mode: '0755'
     creates: /root/lxc-2.0.4/README
   ## Cannot change ownership to uid 201105, gid 200512
-  ignore_errors: true
+  failed_when: false
 
 - name: build lxc
   command: "{{ item }}"
