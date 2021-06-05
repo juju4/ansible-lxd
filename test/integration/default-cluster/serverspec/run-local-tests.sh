@@ -38,4 +38,3 @@ ps axu | grep lxd
 [ X`which systemctl` != 'X' ] && systemctl status lxd --no-pager
 [ X`which journalctl` != 'X' ] && journalctl -xe --no-pager
 true
-

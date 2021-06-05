@@ -84,4 +84,3 @@ https://forum.proxmox.com/threads/ubuntu-snaps-inside-lxc-container-on-proxmox.3
 ## License
 
 BSD 2-clause
-

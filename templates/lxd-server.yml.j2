@@ -5,7 +5,7 @@ config:
 storage_pools:
 {% if not lxd_with_zfs_backend or (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")) %}
 - config:
-  name: {{ lxd_storage_name }} 
+  name: {{ lxd_storage_name }}
   driver: dir
 {% else %}
 - config:
@@ -65,5 +65,3 @@ cluster:
   server_address: ""
   cluster_password: ""
 {% endif %}
-
-
