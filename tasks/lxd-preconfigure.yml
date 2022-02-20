@@ -13,12 +13,12 @@
         - "openssl rand -base64 48 | perl -ne 'print \"$_\" x2' | lxc exec {{ guest }} -- passwd root"
       when: lxclist.stdout.find(" " + guest " ") == -1
 
-    - name: configure lxc instance {{ guest }}
+    - name: configure lxc instance {{ guest }}  # noqa no-changed-when
       command: "lxc exec {{ guest }} -- {{ item }}"
       with_items: "{{ shellcmds }}"
       # ignore_errors: true
 
-    - name: stop and publish lxc instance {{ guest }}
+    - name: stop and publish lxc instance {{ guest }}  # noqa no-changed-when
       command: "{{ item }}"
       with_items:
         - "lxc stop {{ guest }} --force"

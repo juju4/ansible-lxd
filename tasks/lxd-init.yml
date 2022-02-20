@@ -88,6 +88,6 @@
 
     ## FIXME! there seems to be a bug with core.https_address
     ## FIXME! idempotence
-    - name: lxd set core.https_address
+    - name: lxd set core.https_address  # noqa no-changed-when
       command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
   when: lxd_cluster|bool
