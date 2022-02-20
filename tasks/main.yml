@@ -4,7 +4,7 @@
   debug:
     var: ansible_env
 
-- include: travis.yml
+- import_tasks: travis.yml
   when: ansible_env['TRAVIS'] is defined and ansible_env['TRAVIS'] == 'true'
 
 - name: Include version-specific variables for Ubuntu.
@@ -14,16 +14,16 @@
   include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == "RedHat"
 
-- include: debian.yml
+- import_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- include: redhat.yml
+- import_tasks: redhat.yml
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 7
 
-- include: redhat7.yml
+- import_tasks: redhat7.yml
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
 
-- include: lxd.yml
+- import_tasks: lxd.yml
 
 - name: Get LXD Version
   command: lxd --version
@@ -34,5 +34,5 @@
   set_fact:
     lxd_version: "{{ lxd_version_cmd.stdout_lines[0] }}"
 
-- include: lxd-init.yml
+- import_tasks: lxd-init.yml
   when: lxd_version is version('3.0', operator='ge', strict=True)

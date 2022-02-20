@@ -8,9 +8,9 @@
 - name: Ensure lxd group exists
   group: name=lxd state=present
 
-- include: lxc-source.yml
-- include: lxcfs-source.yml
-- include: lxd-source.yml
+- import_tasks: lxc-source.yml
+- import_tasks: lxcfs-source.yml
+- import_tasks: lxd-source.yml
 
 - name: retrieve lxd debian package source
   get_url:
