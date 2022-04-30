@@ -1,14 +1,14 @@
 ---
 
 - name: Ensure GOPATH dir exists
-  file: dest=/root/go state=directory mode=0755
+  ansible.builtin.file: dest=/root/go state=directory mode=0755
 
 - name: retrieve lxd go source
-  command: "go get github.com/lxc/lxd creates=/root/go/src/github.com/lxc/lxd"
+  ansible.builtin.command: "go get github.com/lxc/lxd creates=/root/go/src/github.com/lxc/lxd"
   environment:
     GOPATH: /root/go
 - name: build lxd go source
-  command: "make"
+  ansible.builtin.command: "make"
   args:
     chdir: /root/go/src/github.com/lxc/lxd
     creates: /root/go/bin/lxd
@@ -16,7 +16,7 @@
     GOPATH: /root/go
     PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
 - name: copy go executables to /usr/local/bin
-  copy: "src=/root/go/bin/{{ item }} dest=/usr/bin mode=0755"
+  ansible.builtin.copy: "src=/root/go/bin/{{ item }} dest=/usr/bin mode=0755"
   with_items:
     - lxc
     - lxd
@@ -25,7 +25,7 @@
     - fuidshift
 
 - name: add /usr/local/lib to ld.so.conf
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/ld.so.conf.d/usr-local.conf
     line: '/usr/local/lib'
     mode: '0644'
@@ -36,13 +36,13 @@
 
 ## Note: those commands may work only after notify/services reload, so we flush
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 # - name: force ldconfig reload for consecutive tasks
-#   command: "ldconfig"
+#   ansible.builtin.command: "ldconfig"
 #   when: ldso.changed
 
 - name: define uid/gid for containers
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ item }}"
     line: '^root:1000000:65536'
     mode: '0644'

@@ -3,7 +3,7 @@
 
 - block:
     - name: start lxc instance {{ guest }}
-      shell: "{{ item }}"  # noqa 305
+      ansible.builtin.shell: "{{ item }}"  # noqa 305
       with_items:
         - "lxc init {{ template }} {{ guest }}"
         - "lxc start {{ guest }}"
@@ -14,12 +14,12 @@
       when: lxclist.stdout.find(" " + guest " ") == -1
 
     - name: configure lxc instance {{ guest }}  # noqa no-changed-when
-      command: "lxc exec {{ guest }} -- {{ item }}"
+      ansible.builtin.command: "lxc exec {{ guest }} -- {{ item }}"
       with_items: "{{ shellcmds }}"
       # ignore_errors: true
 
     - name: stop and publish lxc instance {{ guest }}  # noqa no-changed-when
-      command: "{{ item }}"
+      ansible.builtin.command: "{{ item }}"
       with_items:
         - "lxc stop {{ guest }} --force"
         - "lxc publish {{ guest }} --alias {{ publishalias }}"

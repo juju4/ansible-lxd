@@ -1,7 +1,7 @@
 ---
 
 - name: configure lxd bridge
-  template:
+  ansible.builtin.template:
     src: lxd-bridge.j2
     dest: /etc/default/lxd-bridge
     mode: 0644
@@ -12,7 +12,7 @@
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
 - name: force restart of lxd to have working network  # noqa 503
-  service:
+  ansible.builtin.service:
     name: lxd
     state: restarted
   when: >
@@ -26,14 +26,14 @@
 - name: Optional configure lxd dnsmasq
   block:
     - name: create config dir
-      file: dest=/etc/lxc state=directory mode=0755
+      ansible.builtin.file: dest=/etc/lxc state=directory mode=0755
     - name: configure static ip inside dnsmasq
-      template: src=lxc-dnsmasq-hosts.conf.j2 dest=/etc/lxc/lxc-dnsmasq-hosts.conf mode=0644 backup=yes
+      ansible.builtin.template: src=lxc-dnsmasq-hosts.conf.j2 dest=/etc/lxc/lxc-dnsmasq-hosts.conf mode=0644 backup=yes
       when: lxd_dnsmasq_staticips is defined and lxd_dnsmasq_staticips != []
   when: lxd_dnsmasq_conf is defined and lxd_dnsmasq_conf
 
 - name: increase subuid/gid
-  replace:
+  ansible.builtin.replace:
     dest: "{{ item }}"
     regexp: '^(.*):([0-9]*):([0-9]*)$'
     replace: "\\1:{{ lxd_subid_start }}:{{ lxd_subid_range }}"
@@ -44,21 +44,21 @@
     - /etc/subgid
 
 - name: check if lxd is running
-  shell: "ps axu |grep [l]xd"
+  ansible.builtin.shell: "ps axu |grep [l]xd"
   changed_when: false
   register: ps
   ignore_errors: true
 - name: Debug | process output
-  debug:
+  ansible.builtin.debug:
     var: ps
 
 ## FIXME! idempotency issue on xenial: lxd fault at first run / lxd in lxd impact?
 - name: Debug | ansible_virtualization_type
-  debug:
+  ansible.builtin.debug:
     var: ansible_virtualization_type
 
 - name: ensure lxd service is started and enabled
-  service:
+  ansible.builtin.service:
     name: lxd
     state: started
     enabled: yes
@@ -70,30 +70,30 @@
   failed_when: false
 
 - name: check if lxd is running
-  shell: "ps axu |grep [l]xd"
+  ansible.builtin.shell: "ps axu |grep [l]xd"
   changed_when: false
   register: ps
   ignore_errors: true
 - name: Debug | process output
-  debug:
+  ansible.builtin.debug:
     var: ps
 
 - name: optional reboot
   block:
     - name: Debian | Check if a reboot is required
-      register: file
+      ansible.builtin.register: file
       stat: path=/var/run/reboot-required get_md5=no
     - name: Need to reboot system?
-      debug: msg="You will need to reboot system. asked ansible not doing it."
+      ansible.builtin.debug: msg="You will need to reboot system. asked ansible not doing it."
       when: file.stat.exists is defined and file.stat.exists and lxd_noreboot is defined and lxd_noreboot
     - name: Reboot system
-      command: /sbin/reboot
+      ansible.builtin.command: /sbin/reboot
       when: file.stat.exists is defined and file.stat.exists and not (lxd_noreboot is defined and lxd_noreboot)
       async: 0
       poll: 0
       failed_when: false
     - name: waiting for server to come back
-      wait_for:
+      ansible.builtin.wait_for:
         host: "{{ inventory_hostname }}"
         state: started
       delegate_to: localhost

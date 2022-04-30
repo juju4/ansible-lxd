@@ -2,7 +2,7 @@
 
 - block:
     - name: Ubuntu | Enable backports (replace)
-      replace:
+      ansible.builtin.replace:
         dest: '/etc/apt/sources.list'
         regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release|lower }}-backports'
         replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release|lower }}-backports'
@@ -10,7 +10,7 @@
         backup: yes
       register: backports1
     - name: Ubuntu | Enable backports (line)
-      lineinfile:
+      ansible.builtin.lineinfile:
         dest: '/etc/apt/sources.list'
         regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release|lower }}-backports main restricted universe multiverse'
         line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release|lower }}-backports main restricted universe multiverse'
@@ -19,14 +19,14 @@
       register: backports2
 
     - name: apt | update cache
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         cache_valid_time: 3600
       when: backports1.changed or backports2.changed
       register: pkg_result
       until: pkg_result is success
     - name: apt | install of lxd from backports
-      apt:
+      ansible.builtin.apt:
         name: lxd
         state: latest  # noqa 403
         default_release: "{{ ansible_distribution_release|lower }}-backports"
@@ -34,19 +34,19 @@
   when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' or ansible_distribution_release.lower() == 'xenial'
 
 - name: Debian | refresh apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
 
 - name: apt | lxd
-  apt:
+  ansible.builtin.apt:
     name: "{{ lxd_packages }}"
     state: present
   register: pkg_result
   until: pkg_result is success
 
 - name: apt | zfs dependencies
-  apt:
+  ansible.builtin.apt:
     name: zfsutils-linux
     state: present
   when: >
@@ -56,13 +56,13 @@
   until: pkg_result is success
 
 - name: ensure aide.conf.d directory exists
-  file:
+  ansible.builtin.file:
     dest: /etc/aide/aide.conf.d
     state: directory
     mode: 0755
 
 - name: add additional aide HIDS configuration
-  copy:
+  ansible.builtin.copy:
     src: 99_aide_local_lxd
     dest: /etc/aide/aide.conf.d/99_aide_local_lxd
     mode: 0644

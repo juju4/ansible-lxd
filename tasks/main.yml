@@ -1,7 +1,7 @@
 ---
 
 - name: debug ansible_env
-  debug:
+  ansible.builtin.debug:
     var: ansible_env
 
 - import_tasks: travis.yml
@@ -26,12 +26,12 @@
 - import_tasks: lxd.yml
 
 - name: Get LXD Version
-  command: lxd --version
+  ansible.builtin.command: lxd --version
   register: lxd_version_cmd
   changed_when: false
 
 - name: Extract LXD version
-  set_fact:
+  ansible.builtin.set_fact:
     lxd_version: "{{ lxd_version_cmd.stdout_lines[0] }}"
 
 - import_tasks: lxd-init.yml

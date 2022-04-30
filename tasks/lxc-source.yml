@@ -1,14 +1,14 @@
 ---
 
 - name: retrieve lxc source
-  get_url:
+  ansible.builtin.get_url:
     url: https://linuxcontainers.org/downloads/lxc/lxc-2.0.4.tar.gz
     checksum: 'sha256:14c9e699a4bf4e23a420922eb5ae3e163bb151c3d2bf6a3dcbea48c2dd3e9582'
     dest: /root/lxc-2.0.4.tar.gz
     mode: '0600'
 
 - name: uncompress lxc archive
-  unarchive:
+  ansible.builtin.unarchive:
     src: /root/lxc-2.0.4.tar.gz
     dest: /root/
     mode: '0755'
@@ -17,7 +17,7 @@
   failed_when: false
 
 - name: build lxc
-  command: "{{ item }}"
+  ansible.builtin.command: "{{ item }}"
   args:
     chdir: /root/lxc-2.0.4
     creates: /usr/local/bin/lxc-create
