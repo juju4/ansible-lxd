@@ -81,8 +81,8 @@
 - name: optional reboot
   block:
     - name: Debian | Check if a reboot is required
-      ansible.builtin.register: file
-      stat: path=/var/run/reboot-required get_md5=no
+      register: file
+      ansible.builtin.stat: path=/var/run/reboot-required get_md5=no
     - name: Need to reboot system?
       ansible.builtin.debug: msg="You will need to reboot system. asked ansible not doing it."
       when: file.stat.exists is defined and file.stat.exists and lxd_noreboot is defined and lxd_noreboot

@@ -1,15 +1,15 @@
 ---
 - name: restart monit
-  service: name=monit state=restarted
+  ansible.builtin.service: name=monit state=restarted
 
 - name: restart lxd
-  service: name=lxd state=restarted
+  ansible.builtin.service: name=lxd state=restarted
   when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
   ## centos7/vagrant/virtualbox
   failed_when: false
 
 - name: restart lxd-bridge
-  service: name=lxd-bridge state=restarted
+  ansible.builtin.service: name=lxd-bridge state=restarted
   when: >
     ansible_distribution_release == 'xenial' and
     (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
@@ -17,10 +17,10 @@
   failed_when: false
 
 - name: ldconfig reload
-  command: ldconfig
+  ansible.builtin.command: ldconfig
 
 - name: RedHat | reboot
-  command: /sbin/reboot
+  ansible.builtin.command: /sbin/reboot
   async: 0
   poll: 0
   failed_when: false
