@@ -1,7 +1,8 @@
 ---
 ## when Ansible 2.2.0 released: use lxd_container module
 
-- block:
+- name: lxd images published
+  block:
     - name: start lxc instance {{ guest }}
       ansible.builtin.shell: "{{ item }}"  # noqa 305
       with_items:
@@ -24,4 +25,4 @@
         - "lxc stop {{ guest }} --force"
         - "lxc publish {{ guest }} --alias {{ publishalias }}"
         - "lxc delete {{ guest }}"
-  when: imagelist.stdout.find(" {{ publishalias }} ") == -1
+  when: imagelist.stdout.find(" " + publishalias + " ") == -1

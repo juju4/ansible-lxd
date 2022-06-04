@@ -1,6 +1,7 @@
 ---
 
-- block:
+- name: Ubuntu trusty, xenial
+  block:
     - name: Ubuntu | Enable backports (replace)
       ansible.builtin.replace:
         dest: '/etc/apt/sources.list'
