@@ -1,6 +1,6 @@
 ---
 
 lxd_packages:
-    - lxd
+    - lxd-installer
     - python3-pip
     - sqlite3

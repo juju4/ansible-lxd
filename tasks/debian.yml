@@ -46,6 +46,11 @@
   register: pkg_result
   until: pkg_result is success
 
+- name: Install lxd via snap
+  community.general.snap:
+    name:
+      - lxd
+
 - name: apt | zfs dependencies
   ansible.builtin.apt:
     name: zfsutils-linux
