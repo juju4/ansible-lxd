@@ -5,16 +5,16 @@
     - name: Ubuntu | Enable backports (replace)
       ansible.builtin.replace:
         dest: '/etc/apt/sources.list'
-        regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release|lower }}-backports'
-        replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release|lower }}-backports'
+        regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release | lower }}-backports'
+        replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release | lower }}-backports'
         mode: '0644'
         backup: yes
       register: backports1
     - name: Ubuntu | Enable backports (line)
       ansible.builtin.lineinfile:
         dest: '/etc/apt/sources.list'
-        regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release|lower }}-backports main restricted universe multiverse'
-        line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release|lower }}-backports main restricted universe multiverse'
+        regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release | lower }}-backports main restricted universe multiverse'
+        line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release | lower }}-backports main restricted universe multiverse'
         mode: '0644'
         backup: yes
       register: backports2
@@ -30,7 +30,7 @@
       ansible.builtin.apt:
         name: lxd
         state: latest  # noqa 403
-        default_release: "{{ ansible_distribution_release|lower }}-backports"
+        default_release: "{{ ansible_distribution_release | lower }}-backports"
         update_cache: yes
   when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' or ansible_distribution_release.lower() == 'xenial'
 
