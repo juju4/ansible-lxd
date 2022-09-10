@@ -1,13 +1,13 @@
 ---
 
-- name: retrieve lxcfs source
+- name: Retrieve lxcfs source
   ansible.builtin.get_url:
     url: https://linuxcontainers.org/downloads/lxcfs/lxcfs-2.0.3.tar.gz
     checksum: 'sha256:dd94e19bff202cb9fe2aa7d244b2cccf53cf5d7f6dd76c815e1161e3ba4ce0df'
     dest: /root/lxcfs-2.0.3.tar.gz
     mode: '0600'
 
-- name: uncompress lxcfs archive
+- name: Uncompress lxcfs archive
   ansible.builtin.unarchive:
     src: /root/lxcfs-2.0.3.tar.gz
     dest: /root/
@@ -15,7 +15,7 @@
   ## Cannot change ownership to uid 201105, gid 200512
   failed_when: false
 
-- name: build lxcfs
+- name: Build lxcfs
   ansible.builtin.command: "{{ item }}"
   args:
     chdir: /root/lxcfs-2.0.3

@@ -1,17 +1,17 @@
 ---
 
-- name: configure lxd bridge
+- name: Configure lxd bridge
   ansible.builtin.template:
     src: lxd-bridge.j2
     dest: /etc/default/lxd-bridge
     mode: 0644
     backup: yes
   notify:
-    - restart lxd-bridge
+    - Restart lxd-bridge
   register: lxdconf
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
-- name: force restart of lxd to have working network  # noqa 503
+- name: Force restart of lxd to have working network  # noqa 503
   ansible.builtin.service:
     name: lxd
     state: restarted
@@ -25,14 +25,14 @@
 
 - name: Optional configure lxd dnsmasq
   block:
-    - name: create config dir
+    - name: Create config dir
       ansible.builtin.file: dest=/etc/lxc state=directory mode=0755
-    - name: configure static ip inside dnsmasq
+    - name: Configure static ip inside dnsmasq
       ansible.builtin.template: src=lxc-dnsmasq-hosts.conf.j2 dest=/etc/lxc/lxc-dnsmasq-hosts.conf mode=0644 backup=yes
       when: lxd_dnsmasq_staticips is defined and lxd_dnsmasq_staticips != []
   when: lxd_dnsmasq_conf is defined and lxd_dnsmasq_conf
 
-- name: increase subuid/gid
+- name: Increase subuid/gid
   ansible.builtin.replace:
     dest: "{{ item }}"
     regexp: '^(.*):([0-9]*):([0-9]*)$'
@@ -43,7 +43,7 @@
     - /etc/subuid
     - /etc/subgid
 
-- name: check if lxd is running
+- name: Check if lxd is running
   ansible.builtin.shell: "ps axu |grep [l]xd"
   changed_when: false
   register: ps
@@ -57,7 +57,7 @@
   ansible.builtin.debug:
     var: ansible_virtualization_type
 
-- name: ensure lxd service is started and enabled
+- name: Ensure lxd service is started and enabled
   ansible.builtin.service:
     name: lxd
     state: started
@@ -69,7 +69,7 @@
 ## centos7/vagrant/virtualbox
   failed_when: false
 
-- name: check if lxd is running
+- name: Check if lxd is running
   ansible.builtin.shell: "ps axu |grep [l]xd"
   changed_when: false
   register: ps
@@ -78,7 +78,7 @@
   ansible.builtin.debug:
     var: ps
 
-- name: optional reboot
+- name: Optional reboot
   block:
     - name: Debian | Check if a reboot is required
       register: file
@@ -92,7 +92,7 @@
       async: 0
       poll: 0
       failed_when: false
-    - name: waiting for server to come back
+    - name: Waiting for server to come back
       ansible.builtin.wait_for:
         host: "{{ inventory_hostname }}"
         state: started
@@ -105,7 +105,7 @@
     (travisci is not defined or not travisci)
 
 ## REVIEW needed: https://github.com/lxc/lxd/blob/master/doc/production-setup.md
-- name: increase fs.inotify.max_user_instances (default 128)
+- name: Increase fs.inotify.max_user_instances (default 128)
   sysctl:
     name: "fs.inotify.max_user_instances"
     value: "1048576"

@@ -19,14 +19,14 @@
         backup: yes
       register: backports2
 
-    - name: apt | update cache
+    - name: Debian | update cache
       ansible.builtin.apt:
         update_cache: yes
         cache_valid_time: 3600
       when: backports1.changed or backports2.changed
       register: pkg_result
       until: pkg_result is success
-    - name: apt | install of lxd from backports
+    - name: Debian | install of lxd from backports
       ansible.builtin.apt:
         name: lxd
         state: latest  # noqa 403
@@ -39,7 +39,7 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: apt | lxd
+- name: Debian | lxd
   ansible.builtin.apt:
     name: "{{ lxd_packages }}"
     state: present
@@ -51,7 +51,7 @@
     name:
       - lxd
 
-- name: apt | zfs dependencies
+- name: Debian | zfs dependencies
   ansible.builtin.apt:
     name: zfsutils-linux
     state: present
@@ -61,13 +61,13 @@
   register: pkg_result
   until: pkg_result is success
 
-- name: ensure aide.conf.d directory exists
+- name: Ensure aide.conf.d directory exists
   ansible.builtin.file:
     dest: /etc/aide/aide.conf.d
     state: directory
     mode: 0755
 
-- name: add additional aide HIDS configuration
+- name: Add additional aide HIDS configuration
   ansible.builtin.copy:
     src: 99_aide_local_lxd
     dest: /etc/aide/aide.conf.d/99_aide_local_lxd

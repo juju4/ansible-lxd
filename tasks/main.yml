@@ -1,6 +1,6 @@
 ---
 
-- name: debug ansible_env
+- name: Debug | ansible_env
   ansible.builtin.debug:
     var: ansible_env
 

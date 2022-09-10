@@ -2,7 +2,7 @@
 
 - name: LXD init
   block:
-  - name: lxc info
+  - name: Lxc info
     ansible.builtin.command: lxc info
     register: lxc_info_src0
     run_once: true
@@ -13,7 +13,7 @@
       var: lxc_info_src0
       verbosity: 1
 
-  - name: create lxd-server.yml
+  - name: Create lxd-server.yml
     ansible.builtin.set_fact:
       master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
 
@@ -36,7 +36,7 @@
       content: "{{ master }}"
       mode: '0644'
 
-  - name: lxd init lxd-server.yml
+  - name: Lxd init lxd-server.yml
     ansible.builtin.command: lxd init --preseed <
     args:
       stdin: "{{ master }}"
@@ -46,17 +46,17 @@
       and
       lxc_info_src0.stdout.find('storage: \"\"') != -1
 
-  - name: lxc info
+  - name: Lxc info
     ansible.builtin.command: lxc info
     register: lxc_info_src
     run_once: true
     changed_when: false
 
-  - name: store stdout from lxc info
+  - name: Store stdout from lxc info
     ansible.builtin.set_fact:
       lxc_info: "{{ lxc_info_src.stdout | from_yaml }}"
 
-- name: check network
+- name: Check network
   ansible.builtin.command: lxc network list
   register: lxc_network_list
   ignore_errors: true
@@ -73,14 +73,14 @@
       ansible.builtin.debug:
         var: lxc_info.environment.certificate_fingerprint
 
-    - name: create lxc-client.yml
+    - name: Create lxc-client.yml
       ansible.builtin.set_fact:
         slaves="{{ lookup('template', 'lxd-client.yml.j2') }}"
 
     # - ansible.builtin.debug:
     #     var: slaves
 
-    - name: lxd init lxd-client.yml
+    - name: Lxd init lxd-client.yml
       ansible.builtin.command: lxd init --preseed <
       args:
         stdin: "{{ slaves }}"
@@ -88,6 +88,6 @@
 
     ## FIXME! there seems to be a bug with core.https_address
     ## FIXME! idempotence
-    - name: lxd set core.https_address  # noqa no-changed-when
+    - name: Lxd set core.https_address  # noqa no-changed-when
       ansible.builtin.command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
-  when: lxd_cluster|bool
+  when: lxd_cluster | bool

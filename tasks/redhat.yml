@@ -1,6 +1,6 @@
 ---
 
-- name: yum | lxd dependencies install
+- name: Redhat | lxd dependencies install
   ansible.builtin.yum: name={{ lxd_packages }} state=present update_cache=yes
   register: pkg_result
   until: pkg_result is success
@@ -12,26 +12,26 @@
 - import_tasks: lxcfs-source.yml
 - import_tasks: lxd-source.yml
 
-- name: retrieve lxd debian package source
+- name: Retrieve lxd debian package source
   ansible.builtin.get_url:
     url: http://archive.ubuntu.com/ubuntu/pool/main/l/lxd/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
     checksum: 'sha256:bdac42398a5b68e863eecc463438434d635d322ef2b305b0089555d728845b28'
     dest: /root/
     mode: 0600
-- name: uncompress lxd debian package archive
+- name: Uncompress lxd debian package archive
   ansible.builtin.unarchive:
     src: /root/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
     dest: /root/
     mode: '0755'
 
-- name: review systemd file for RHEL/CentOS 7
+- name: Review systemd file for RHEL/CentOS 7
   ansible.builtin.replace:
     dest: /root/debian/lxd.service
     regexp: '^TasksMax=(.*)'
     replace: '#TasksMax=\1'
     mode: '0644'
     backup: yes
-- name: add systemd configuration
+- name: Add systemd configuration
   ansible.builtin.copy: src=/root/{{ item }} dest=/lib/systemd/system/ mode=0755 remote_src=yes
   with_items:
     - 'debian/lxd.service'
@@ -39,7 +39,7 @@
     - 'debian/lxd.lxd-bridge.service'
     - 'debian/lxd.lxd-containers.service'
     - 'lxcfs-2.0.3/config/init/systemd/lxcfs.service'
-- name: symlink lxd.lxd-bridge.service
+- name: Symlink lxd.lxd-bridge.service
   ansible.builtin.file:
     src: /lib/systemd/system/lxd.lxd-bridge.service
     dest: /lib/systemd/system/lxd-bridge.service
@@ -50,7 +50,7 @@
   with_items:
     - /usr/lib/lxd
     - /var/log/lxd
-- name: add extra files from debian systemd
+- name: Add extra files from debian systemd
   ansible.builtin.copy:
     src: "/root/{{ item.s }}"
     dest: "{{ item.d }}"

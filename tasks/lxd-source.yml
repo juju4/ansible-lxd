@@ -3,11 +3,11 @@
 - name: Ensure GOPATH dir exists
   ansible.builtin.file: dest=/root/go state=directory mode=0755
 
-- name: retrieve lxd go source
+- name: Retrieve lxd go source
   ansible.builtin.command: "go get github.com/lxc/lxd creates=/root/go/src/github.com/lxc/lxd"
   environment:
     GOPATH: /root/go
-- name: build lxd go source
+- name: Build lxd go source
   ansible.builtin.command: "make"
   args:
     chdir: /root/go/src/github.com/lxc/lxd
@@ -15,7 +15,7 @@
   environment:
     GOPATH: /root/go
     PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
-- name: copy go executables to /usr/local/bin
+- name: Copy go executables to /usr/local/bin
   ansible.builtin.copy: "src=/root/go/bin/{{ item }} dest=/usr/bin mode=0755"
   with_items:
     - lxc
@@ -24,14 +24,14 @@
     - lxd-bridge-proxy
     - fuidshift
 
-- name: add /usr/local/lib to ld.so.conf
+- name: Add /usr/local/lib to ld.so.conf
   ansible.builtin.lineinfile:
     dest: /etc/ld.so.conf.d/usr-local.conf
     line: '/usr/local/lib'
     mode: '0644'
     create: yes
   notify:
-    - ldconfig reload
+    - Ldconfig reload
   register: ldso
 
 ## Note: those commands may work only after notify/services reload, so we flush
@@ -41,7 +41,7 @@
 #   ansible.builtin.command: "ldconfig"
 #   when: ldso.changed
 
-- name: define uid/gid for containers
+- name: Define uid/gid for containers
   ansible.builtin.lineinfile:
     dest: "{{ item }}"
     line: '^root:1000000:65536'

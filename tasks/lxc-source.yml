@@ -1,13 +1,13 @@
 ---
 
-- name: retrieve lxc source
+- name: Retrieve lxc source
   ansible.builtin.get_url:
     url: https://linuxcontainers.org/downloads/lxc/lxc-2.0.4.tar.gz
     checksum: 'sha256:14c9e699a4bf4e23a420922eb5ae3e163bb151c3d2bf6a3dcbea48c2dd3e9582'
     dest: /root/lxc-2.0.4.tar.gz
     mode: '0600'
 
-- name: uncompress lxc archive
+- name: Uncompress lxc archive
   ansible.builtin.unarchive:
     src: /root/lxc-2.0.4.tar.gz
     dest: /root/
@@ -16,7 +16,7 @@
   ## Cannot change ownership to uid 201105, gid 200512
   failed_when: false
 
-- name: build lxc
+- name: Build lxc
   ansible.builtin.command: "{{ item }}"
   args:
     chdir: /root/lxc-2.0.4
