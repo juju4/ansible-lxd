@@ -1,39 +1,5 @@
 ---
 
-- name: Ubuntu trusty, xenial
-  block:
-    - name: Ubuntu | Enable backports (replace)
-      ansible.builtin.replace:
-        dest: '/etc/apt/sources.list'
-        regexp: '^# deb http://(.*)/ubuntu([/]*) {{ ansible_distribution_release | lower }}-backports'
-        replace: 'deb http://\1/ubuntu\2 {{ ansible_distribution_release | lower }}-backports'
-        mode: '0644'
-        backup: yes
-      register: backports1
-    - name: Ubuntu | Enable backports (line)
-      ansible.builtin.lineinfile:
-        dest: '/etc/apt/sources.list'
-        regexp: '^deb http://.*/ubuntu {{ ansible_distribution_release | lower }}-backports main restricted universe multiverse'
-        line: 'deb http://archive.ubuntu.com/ubuntu {{ ansible_distribution_release | lower }}-backports main restricted universe multiverse'
-        mode: '0644'
-        backup: yes
-      register: backports2
-
-    - name: Debian | update cache
-      ansible.builtin.apt:
-        update_cache: yes
-        cache_valid_time: 3600
-      when: backports1.changed or backports2.changed
-      register: pkg_result
-      until: pkg_result is success
-    - name: Debian | install of lxd from backports
-      ansible.builtin.apt:
-        name: lxd
-        state: latest  # noqa 403
-        default_release: "{{ ansible_distribution_release | lower }}-backports"
-        update_cache: yes
-  when: lxd_force_ubuntu_backports or ansible_distribution_release.lower() == 'trusty' or ansible_distribution_release.lower() == 'xenial'
-
 - name: Debian | refresh apt cache
   ansible.builtin.apt:
     update_cache: yes
