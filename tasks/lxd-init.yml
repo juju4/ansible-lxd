@@ -23,13 +23,17 @@
       verbosity: 1
 
   - name: Debug | lxd_cluster
-    ansible.builtin.debug: var=lxd_cluster
+    ansible.builtin.debug:
+      var: lxd_cluster
   - name: Debug | inventory_hostname
-    ansible.builtin.debug: var=inventory_hostname
+    ansible.builtin.debug:
+      var: inventory_hostname
   - name: Debug | groups.all[0]
-    ansible.builtin.debug: var=groups.all[0]
+    ansible.builtin.debug:
+      var: groups.all[0]
   - name: Debug | lxc_info_src0
-    ansible.builtin.debug: var=lxc_info_src0.stdout
+    ansible.builtin.debug:
+      var: lxc_info_src0.stdout
   - name: Set temporary lxd-server configuration file
     ansible.builtin.copy:
       dest: /tmp/lxd-server.yml
@@ -68,6 +72,7 @@
     verbosity: 1
 
 - name: LXD cluster clients
+  when: lxd_cluster | bool
   block:
     - name: Debug | lxc certificate fingerprint
       ansible.builtin.debug:
@@ -75,7 +80,7 @@
 
     - name: Create lxc-client.yml
       ansible.builtin.set_fact:
-        slaves="{{ lookup('template', 'lxd-client.yml.j2') }}"
+        slaves: "{{ lookup('template', 'lxd-client.yml.j2') }}"
 
     # - ansible.builtin.debug:
     #     var: slaves
@@ -90,4 +95,3 @@
     ## FIXME! idempotence
     - name: Lxd set core.https_address  # noqa no-changed-when
       ansible.builtin.command: lxc config set core.https_address {{ ansible_default_ipv4.address }}:8443
-  when: lxd_cluster | bool

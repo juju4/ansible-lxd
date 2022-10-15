@@ -78,6 +78,6 @@
 # https://github.com/wekan/wekan-snap/wiki/Install-snap-with-Ansible
 
 - name: RedHat | install lxd with snap
-  snap:
+  community.general.snap:
     name: lxd
     state: present

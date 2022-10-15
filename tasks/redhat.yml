@@ -1,16 +1,24 @@
 ---
 
 - name: Redhat | lxd dependencies install
-  ansible.builtin.yum: name={{ lxd_packages }} state=present update_cache=yes
+  ansible.builtin.yum:
+    name: "{{ lxd_packages }}"
+    state: "present"
+    update_cache: "yes"
   register: pkg_result
   until: pkg_result is success
 
 - name: Ensure lxd group exists
-  ansible.builtin.group: name=lxd state=present
+  ansible.builtin.group:
+    name: lxd
+    state: present
 
-- import_tasks: lxc-source.yml
-- import_tasks: lxcfs-source.yml
-- import_tasks: lxd-source.yml
+- name: Import lxc-source
+  ansible.builtin.import_tasks: lxc-source.yml
+- name: Import lxcfs-source
+  ansible.builtin.import_tasks: lxcfs-source.yml
+- name: Import lxd-source
+  ansible.builtin.import_tasks: lxd-source.yml
 
 - name: Retrieve lxd debian package source
   ansible.builtin.get_url:
@@ -32,7 +40,11 @@
     mode: '0644'
     backup: yes
 - name: Add systemd configuration
-  ansible.builtin.copy: src=/root/{{ item }} dest=/lib/systemd/system/ mode=0755 remote_src=yes
+  ansible.builtin.copy:
+    src: "/root/{{ item }}"
+    dest: "/lib/systemd/system/"
+    mode: "0755"
+    remote_src: "yes"
   with_items:
     - 'debian/lxd.service'
     - 'debian/lxd.socket'
@@ -46,7 +58,10 @@
     state: link
     mode: '0644'
 - name: Ensure directories exist
-  ansible.builtin.file: dest={{ item }} state=directory mode=0755
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: "directory"
+    mode: "0755"
   with_items:
     - /usr/lib/lxd
     - /var/log/lxd
@@ -63,4 +78,6 @@
     - { s: 'go/src/github.com/lxc/lxd/lxd-bridge/lxd-bridge', d: '/usr/lib/lxd' }
 
 - name: Redhat | Ensure services are enabled
-  ansible.builtin.service: "name=lxd enabled=yes"
+  ansible.builtin.service:
+    name: lxd
+    enabled: yes

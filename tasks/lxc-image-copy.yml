@@ -1,6 +1,6 @@
 ---
 
 # - debug: var=current
-- name: Download lxc image {{ image }}
+- name: Download lxc image {{ image }}  # noqa no-free-form
   ansible.builtin.command: "lxc image copy {{ image }} local: --alias={{ alias }}"
   when: current is defined and current.stdout.find(alias) == -1

@@ -26,4 +26,4 @@ galaxy_info:
   galaxy_tags:
     - system
 dependencies:
-  - juju4.redhat_epel
+  - role: juju4.redhat_epel
