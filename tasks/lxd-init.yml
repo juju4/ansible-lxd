@@ -2,63 +2,63 @@
 
 - name: LXD init
   block:
-  - name: Lxc info
-    ansible.builtin.command: lxc info
-    register: lxc_info_src0
-    run_once: true
-    changed_when: false
+    - name: Lxc info
+      ansible.builtin.command: lxc info
+      register: lxc_info_src0
+      run_once: true
+      changed_when: false
 
-  - name: Debug | lxc info
-    ansible.builtin.debug:
-      var: lxc_info_src0
-      verbosity: 1
+    - name: Debug | lxc info
+      ansible.builtin.debug:
+        var: lxc_info_src0
+        verbosity: 1
 
-  - name: Create lxd-server.yml
-    ansible.builtin.set_fact:
-      master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
+    - name: Create lxd-server.yml
+      ansible.builtin.set_fact:
+        master: "{{ lookup('template', 'lxd-server.yml.j2') }}"
 
-  - name: Debug | lxd-server config
-    ansible.builtin.debug:
-      var: master
-      verbosity: 1
+    - name: Debug | lxd-server config
+      ansible.builtin.debug:
+        var: master
+        verbosity: 1
 
-  - name: Debug | lxd_cluster
-    ansible.builtin.debug:
-      var: lxd_cluster
-  - name: Debug | inventory_hostname
-    ansible.builtin.debug:
-      var: inventory_hostname
-  - name: Debug | groups.all[0]
-    ansible.builtin.debug:
-      var: groups.all[0]
-  - name: Debug | lxc_info_src0
-    ansible.builtin.debug:
-      var: lxc_info_src0.stdout
-  - name: Set temporary lxd-server configuration file
-    ansible.builtin.copy:
-      dest: /tmp/lxd-server.yml
-      content: "{{ master }}"
-      mode: '0644'
+    - name: Debug | lxd_cluster
+      ansible.builtin.debug:
+        var: lxd_cluster
+    - name: Debug | inventory_hostname
+      ansible.builtin.debug:
+        var: inventory_hostname
+    - name: Debug | groups.all[0]
+      ansible.builtin.debug:
+        var: groups.all[0]
+    - name: Debug | lxc_info_src0
+      ansible.builtin.debug:
+        var: lxc_info_src0.stdout
+    - name: Set temporary lxd-server configuration file
+      ansible.builtin.copy:
+        dest: /tmp/lxd-server.yml
+        content: "{{ master }}"
+        mode: '0644'
 
-  - name: Lxd init lxd-server.yml
-    ansible.builtin.command: lxd init --preseed <
-    args:
-      stdin: "{{ master }}"
-      creates: "{{ lxd_init_file_test }}"
-    when: >
-      (not lxd_cluster or inventory_hostname == groups.all[0])
-      and
-      lxc_info_src0.stdout.find('storage: \"\"') != -1
+    - name: Lxd init lxd-server.yml
+      ansible.builtin.command: lxd init --preseed <
+      args:
+        stdin: "{{ master }}"
+        creates: "{{ lxd_init_file_test }}"
+      when: >
+        (not lxd_cluster or inventory_hostname == groups.all[0])
+        and
+        lxc_info_src0.stdout.find('storage: \"\"') != -1
 
-  - name: Lxc info
-    ansible.builtin.command: lxc info
-    register: lxc_info_src
-    run_once: true
-    changed_when: false
+    - name: Lxc info
+      ansible.builtin.command: lxc info
+      register: lxc_info_src
+      run_once: true
+      changed_when: false
 
-  - name: Store stdout from lxc info
-    ansible.builtin.set_fact:
-      lxc_info: "{{ lxc_info_src.stdout | from_yaml }}"
+    - name: Store stdout from lxc info
+      ansible.builtin.set_fact:
+        lxc_info: "{{ lxc_info_src.stdout | from_yaml }}"
 
 - name: Check network
   ansible.builtin.command: lxc network list
