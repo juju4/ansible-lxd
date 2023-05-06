@@ -86,7 +86,8 @@
     #     var: slaves
 
     - name: Lxd init lxd-client.yml
-      ansible.builtin.command: lxd init --preseed <
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: lxd init --preseed <
       args:
         stdin: "{{ slaves }}"
       when: inventory_hostname != groups.all[0]

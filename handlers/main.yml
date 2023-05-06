@@ -23,10 +23,12 @@
   failed_when: false
 
 - name: Ldconfig reload
-  ansible.builtin.command: ldconfig
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: ldconfig
 
 - name: RedHat | reboot
-  ansible.builtin.command: /sbin/reboot
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: /sbin/reboot
   async: 0
   poll: 0
   failed_when: false

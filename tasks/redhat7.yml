@@ -36,7 +36,8 @@
     state: started
 
 - name: RedHat | Configure ZFS repository
-  ansible.builtin.command: "{{ item }}"  # noqa 301
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "{{ item }}"
   with_items:
     - yum-config-manager --disable zfs
     - yum-config-manager --enable zfs-kmod
@@ -52,10 +53,11 @@
 - name: Check grub file
   ansible.builtin.stat:
     path: /boot/grub2/grubenv
-    register: grub2
+  register: grub2
 
 - name: RedHat | Configure Kernel
-  ansible.builtin.command: "{{ item }}"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "{{ item }}"
   with_items:
     - grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
     - grubby --args="namespace.unpriv_enable=1" --update-kernel="$(grubby --default-kernel)"

@@ -11,7 +11,7 @@
   register: lxdconf
 
 ## FIXME! if executed in kitchen lxd, "Converge failed"
-- name: Force restart of lxd to have working network  # noqa 503
+- name: Force restart of lxd to have working network  # noqa no-handler
   ansible.builtin.service:
     name: lxd
     state: restarted
@@ -101,7 +101,8 @@
         msg: "You will need to reboot system. asked ansible not doing it."
       when: file.stat.exists is defined and file.stat.exists and lxd_noreboot is defined and lxd_noreboot
     - name: Reboot system
-      ansible.builtin.command: /sbin/reboot
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: /sbin/reboot
       when: file.stat.exists is defined and file.stat.exists and not (lxd_noreboot is defined and lxd_noreboot)
       async: 0
       poll: 0
