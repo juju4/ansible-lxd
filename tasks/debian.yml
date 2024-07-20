@@ -16,6 +16,8 @@
   community.general.snap:
     name:
       - lxd
+  when:
+    - not has_pve.stat.exists
 
 - name: Debian | zfs dependencies
   ansible.builtin.apt:
@@ -23,7 +25,8 @@
     state: present
   when: >
     lxd_with_zfs_backend is defined and lxd_with_zfs_backend and
-    not (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
+    not (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")) and
+    not has_pve.stat.exists
   register: pkg_result
   until: pkg_result is success
 
