@@ -1,7 +1,7 @@
 ---
 
 - name: Redhat | lxd dependencies install
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: "{{ lxd_packages }}"
     state: "present"
     update_cache: "yes"

@@ -13,7 +13,7 @@
     verbosity: 2
 
 - name: RedHat | lxd dependencies install
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: "{{ lxd_packages }}"
     state: present
     update_cache: yes
@@ -22,7 +22,7 @@
   until: pkg_result is success
 
 - name: RedHat | Ensure snapd is present
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: snapd
     state: present
     update_cache: yes
@@ -43,7 +43,7 @@
     - yum-config-manager --enable zfs-kmod
 
 - name: RedHat | Ensure ZFS is present
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: zfs
     state: present
     update_cache: yes
