@@ -51,7 +51,7 @@
 
     - name: Extract LXD version
       ansible.builtin.set_fact:
-        lxd_version: "{{ lxd_version_cmd.stdout_lines[0] }}"
+        lxd_version: "{{ lxd_version_cmd.stdout_lines[0] | regex_replace(' LTS$', '') }}"
 
     - name: Import lxd-init
       ansible.builtin.import_tasks: lxd-init.yml
