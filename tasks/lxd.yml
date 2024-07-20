@@ -95,7 +95,7 @@
       register: file
       ansible.builtin.stat:
         path: /var/run/reboot-required
-        get_md5: no
+        get_checksum: no
     - name: Need to reboot system?
       ansible.builtin.debug:
         msg: "You will need to reboot system. asked ansible not doing it."
