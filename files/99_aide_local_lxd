@@ -9,6 +9,7 @@
 !/var/lib/lxd/storage-pools
 !/var/lib/lxcfs/cgroup
 !/var/lib/lxcfs/proc
+/var/lib/lxcfs/sys$ VarDir
 !/var/lib/lxcfs/sys/devices
 !/var/lib/lxd/shmounts
 !/var/lib/lxd/containers
