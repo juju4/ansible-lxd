@@ -21,20 +21,27 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - os: ubuntu-24.04
+          - distribution: ubuntu
+            version: '24.04'
+            suite: default
             experimental: false
-          - os: ubuntu-22.04
+          - distribution: ubuntu
+            version: '22.04'
+            suite: default
             experimental: false
-          - os: ubuntu-20.04
+          - distribution: ubuntu
+            version: '20.04'
+            suite: default
             experimental: false
     env:
       ANSIBLE_CALLBACKS_ENABLED: profile_tasks
       ANSIBLE_EXTRA_VARS: ""
+      ANSIBLE_ROLE: juju4.lxd
 
     steps:
       - uses: actions/checkout@v4
         with:
-          path: juju4.lxd
+          path: ${{ env.ANSIBLE_ROLE }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -43,28 +50,34 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install ansible-lint flake8 yamllint
+          pip3 install python-debian
           which ansible
           pip3 install ansible
           pip3 show ansible
           ls -l $HOME/.local/bin || true
           ls -l /opt/hostedtoolcache/Python/3.9.1/x64/bin || true
           echo "/opt/hostedtoolcache/Python/3.9.1/x64/bin" >> $GITHUB_PATH
+          which ansible
           ansible --version
-          cd $GITHUB_WORKSPACE/juju4.lxd
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE
           [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
           { echo '[defaults]'; echo 'callbacks_enabled = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
+      - name: Environment
+        run: |
+          pwd
+          env
+          find . -ls
       - name: run test
         run: |
-          cd $GITHUB_WORKSPACE/juju4.lxd && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml ${ANSIBLE_EXTRA_VARS}
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/${{ matrix.suite }}/default.yml ${ANSIBLE_EXTRA_VARS}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
       - name: idempotency run
         run: |
-          cd $GITHUB_WORKSPACE/juju4.lxd && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml ${ANSIBLE_EXTRA_VARS} | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/${{ matrix.suite }}/default.yml ${ANSIBLE_EXTRA_VARS} | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
       - name: On failure
         run: |
-          ansible -i inventory --connection=local -m setup localhost
           systemctl -l --no-pager status
           systemctl -l --no-pager --failed
           ls -l /usr/bin/ | egrep '(python|pip|ansible)'
@@ -78,6 +91,11 @@ jobs:
           ps axuw
           netstat -anp
         if: ${{ failure() }}
+      - name: After script - ansible setup
+        run: |
+          ansible -i inventory --connection=local -m setup localhost
+        if: ${{ always() }}
+        continue-on-error: true
       - name: After script - systemd
         run: |
           systemctl -l --no-pager status lxd || true
