@@ -4,7 +4,7 @@
   ansible.builtin.file:
     dest: /root/go
     state: directory
-    mode: 0755
+    mode: '0755'
 
 - name: Retrieve lxd go source
   ansible.builtin.command: "go get github.com/lxc/lxd"

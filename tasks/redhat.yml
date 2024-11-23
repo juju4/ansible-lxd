@@ -25,7 +25,7 @@
     url: http://archive.ubuntu.com/ubuntu/pool/main/l/lxd/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
     checksum: 'sha256:bdac42398a5b68e863eecc463438434d635d322ef2b305b0089555d728845b28'
     dest: /root/
-    mode: 0600
+    mode: '0600'
 - name: Uncompress lxd debian package archive
   ansible.builtin.unarchive:
     src: /root/lxd_2.0.3-0ubuntu1~ubuntu16.04.2.debian.tar.xz
