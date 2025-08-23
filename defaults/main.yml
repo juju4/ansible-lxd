@@ -15,7 +15,7 @@ lxd_init_file_test: /var/lib/lxd/networks/lxdfan0
 # if storage zfs only
 # lxd_init_file_test: "/var/lib/lxd/disks/{{ lxd_storage_name }}.img"
 
-lxd_fanconf_use_fan: "true"
+lxd_fanconf_use_fan: "false"
 lxd_fanconf_fan: "lxdfan0"
 lxd_fanconf_underlay_subnet: "auto"
 
