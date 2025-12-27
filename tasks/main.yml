@@ -14,26 +14,26 @@
   register: has_pve
 
 - name: Include version-specific variables for Ubuntu.
-  ansible.builtin.include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-  when: ansible_distribution == 'Ubuntu'
+  ansible.builtin.include_vars: "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}.yml"
+  when: ansible_facts['distribution'] == 'Ubuntu'
 - name: Include version-specific variables for Debian.
-  ansible.builtin.include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-  when: ansible_distribution == 'Debian'
+  ansible.builtin.include_vars: "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+  when: ansible_facts['distribution'] == 'Debian'
 - name: Include version-specific variables for RedHat
-  ansible.builtin.include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
-  when: ansible_os_family == "RedHat"
+  ansible.builtin.include_vars: "RedHat-{{ ansible_facts['distribution_major_version'] }}.yml"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Import debian
   ansible.builtin.import_tasks: debian.yml
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Import redhat
   ansible.builtin.import_tasks: redhat.yml
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 7
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int < 7
 
 - name: Import redhat7
   ansible.builtin.import_tasks: redhat7.yml
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int >= 7
 
 - name: Import lxd
   ansible.builtin.import_tasks: lxd.yml

@@ -5,7 +5,7 @@
 ##    as cn=testing-gce-4d114f77-0ff1-41fb-bd33-22879d3249da.c.eco-emissary-99515.internal
 - name: Default | set certificate_cn
   ansible.builtin.set_fact:
-    certificate_cn: "{{ ansible_fqdn }}"
+    certificate_cn: "{{ ansible_facts['fqdn'] }}"
 
 - name: Travis | set certificate_cn to shorter name to avoid openssl bug
   ansible.builtin.set_fact:

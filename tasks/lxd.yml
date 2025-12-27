@@ -17,8 +17,8 @@
     state: restarted
   when: >
     lxdconf.changed and
-    (ansible_virtualization_type is not defined or
-      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    (ansible_facts['virtualization_type'] is not defined or
+      not (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
     )
 ## centos7/vagrant/virtualbox
   failed_when: false
@@ -60,9 +60,9 @@
     var: ps
 
 ## FIXME! idempotency issue on xenial: lxd fault at first run / lxd in lxd impact?
-- name: Debug | ansible_virtualization_type
+- name: Debug | ansible_facts['virtualization_type']
   ansible.builtin.debug:
-    var: ansible_virtualization_type
+    var: ansible_facts['virtualization_type']
 
 - name: Ensure lxd service is started and enabled
   ansible.builtin.service:
@@ -70,8 +70,8 @@
     state: started
     enabled: yes
   when: >
-    (ansible_virtualization_type is not defined or
-      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    (ansible_facts['virtualization_type'] is not defined or
+      not (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
     )
 ## centos7/vagrant/virtualbox
   failed_when: false
@@ -87,8 +87,8 @@
 
 - name: Optional reboot
   when: >
-    (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and
-    (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc")) and
+    (ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu') and
+    (ansible_facts['virtualization_type'] is not defined or not (ansible_facts['virtualization_type'] == "lxc")) and
     (travisci is not defined or not travisci)
   block:
     - name: Debian | Check if a reboot is required
@@ -125,8 +125,8 @@
     sysctl_file: /etc/sysctl.d/10-lxd-inotify.conf
     reload: yes
   when: >
-    (ansible_virtualization_type is not defined or
-      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    (ansible_facts['virtualization_type'] is not defined or
+      not (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
     )
 
 - name: Configure user.max_user_namespaces
@@ -137,10 +137,10 @@
     reload: yes
   when: >
     (
-      (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 18) or
-      (ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 7)
+      (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version']|int >= 18) or
+      (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int >= 7)
     )
     and
-    (ansible_virtualization_type is not defined or
-      not (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+    (ansible_facts['virtualization_type'] is not defined or
+      not (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")
     )
