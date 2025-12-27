@@ -3,7 +3,7 @@ config:
   core.https_address: {{ ansible_default_ipv4.address | default('127.0.0.1') }}:8443
   images.auto_update_interval: 15
 storage_pools:
-{% if not lxd_with_zfs_backend or (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")) %}
+{% if not lxd_with_zfs_backend or (ansible_facts['virtualization_type'] is defined and (ansible_facts['virtualization_type'] == "lxc" or ansible_facts['virtualization_type'] == "docker")) %}
 - config:
   name: {{ lxd_storage_name }}
   driver: dir

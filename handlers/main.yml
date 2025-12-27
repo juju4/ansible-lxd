@@ -8,7 +8,7 @@
   ansible.builtin.service:
     name: lxd
     state: restarted
-  when: (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
+  when: (ansible_facts['virtualization_type'] is not defined or not (ansible_facts['virtualization_type'] == "lxc"))
   ## centos7/vagrant/virtualbox
   failed_when: false
 
@@ -17,8 +17,8 @@
     name: lxd-bridge
     state: restarted
   when: >
-    ansible_distribution_release == 'xenial' and
-    (ansible_virtualization_type is not defined or not (ansible_virtualization_type == "lxc"))
+    ansible_facts['distribution_release'] == 'xenial' and
+    (ansible_facts['virtualization_type'] is not defined or not (ansible_facts['virtualization_type'] == "lxc"))
   ## centos7/vagrant/virtualbox
   failed_when: false
 
