@@ -1,7 +1,7 @@
-[![Actions Status - Master](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Amaster)
-[![Actions Status - Devel](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Adevel)
-
 # LXD ansible role
+
+[![Actions Status - Main](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Amain)
+[![Actions Status - Devel](https://github.com/juju4/ansible-lxd/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-lxd/actions?query=branch%3Adevel)
 
 Ansible role to install LXD only and do network configuration.
 https://linuxcontainers.org/lxd/getting-started-cli/
