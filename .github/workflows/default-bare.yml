@@ -122,7 +122,7 @@ jobs:
         run: |
           if [ -x /usr/bin/snap ]; then
             snap list
-            cat /var/snap/lxd/common/lxd/logs/lxd.log
+            sudo cat /var/snap/lxd/common/lxd/logs/lxd.log
           fi
         if: ${{ always() }}
         continue-on-error: true
